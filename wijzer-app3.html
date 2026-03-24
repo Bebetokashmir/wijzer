@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wijzer App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:#0d0c0a;overflow:hidden}
+:root{
+  --b0:#09090d;--b1:#111117;--b2:#17171f;--b3:#1e1e28;
+  --gold:#c4941e;--gold2:#ddb84e;--gold3:#f0d898;
+  --text:#ede8d8;--sub:#b8b0a0;--muted:#6a6460;
+  --teal:#3dba9a;--red:#e05555;
+  --bdr:rgba(255,255,255,0.07);--bdr2:rgba(196,148,30,0.22);
+}
+
+/* ── OUTER FRAME ── */
+.frame{
+  width:100vw;height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 30% 40%,rgba(196,148,30,.05) 0%,transparent 55%),#0d0c0a;
+}
+.phone{
+  width:390px;height:844px;background:#000;border-radius:52px;position:relative;
+  box-shadow:0 0 0 2px #2a2820,0 0 0 4px #1a1814,0 40px 100px rgba(0,0,0,.8);
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#000;border-radius:0 0 20px 20px;z-index:99}
+.btn-r{position:absolute;right:-3px;top:180px;width:4px;height:70px;background:#2a2820;border-radius:2px}
+.btn-l1{position:absolute;left:-3px;top:140px;width:4px;height:36px;background:#2a2820;border-radius:2px}
+.btn-l2{position:absolute;left:-3px;top:192px;width:4px;height:70px;background:#2a2820;border-radius:2px}
+
+/* ── SCREEN SYSTEM ── */
+.screen{position:absolute;inset:0;background:var(--b0);display:none;flex-direction:column;overflow:hidden}
+.screen.on{display:flex}
+
+/* ── STATUS BAR ── */
+.sbar{height:50px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 28px 8px;flex-shrink:0;z-index:10}
+.sbar-t{font-size:15px;font-weight:500;color:var(--text)}
+.sbar-r{display:flex;gap:5px;align-items:center;font-size:12px;color:var(--text)}
+
+/* ── BOTTOM NAV ── */
+.bnav{height:80px;background:var(--b1);border-top:1px solid var(--bdr);display:flex;align-items:flex-start;justify-content:space-around;padding-top:10px;flex-shrink:0}
+.bni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:5px 10px;border-radius:10px;-webkit-tap-highlight-color:transparent}
+.bni.on .bic{color:var(--gold)}
+.bni.on .blb{color:var(--gold2)}
+.bic{font-size:19px;color:var(--muted);transition:color .2s}
+.blb{font-size:9px;color:var(--muted);font-weight:500;letter-spacing:.02em;transition:color .2s}
+
+/* ── SCROLLABLE AREA ── */
+.scr{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+.scr::-webkit-scrollbar{display:none}
+
+/* ── TYPOGRAPHY ── */
+.pgtitle{font-family:'Playfair Display',serif;font-size:24px;font-weight:400;color:var(--text);line-height:1.15}
+.pgtitle em{font-style:italic;color:var(--gold)}
+.seclabel{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);margin-bottom:8px}
+
+/* ── DOMAIN CHIP ── */
+.dchip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:500;background:var(--b3);border:1px solid var(--bdr);color:var(--muted)}
+.dchip.juridisch{background:rgba(90,130,200,.1);border-color:rgba(90,130,200,.25);color:#8ab0e8}
+.dchip.fiscaal{background:rgba(196,148,30,.1);border-color:var(--bdr2);color:var(--gold2)}
+.dchip.strategisch{background:rgba(61,186,154,.1);border-color:rgba(61,186,154,.22);color:var(--teal)}
+.dchip.financieel{background:rgba(180,100,220,.1);border-color:rgba(180,100,220,.22);color:#c88ae8}
+.dchip.personeel{background:rgba(220,120,80,.1);border-color:rgba(220,120,80,.22);color:#e8a070}
+.dchip.wonen{background:rgba(80,180,160,.1);border-color:rgba(80,180,160,.22);color:#70d4b8}
+
+/* ── CARDS ── */
+.card{background:var(--b2);border:1px solid var(--bdr);border-radius:14px;overflow:hidden}
+.cardpad{padding:14px 16px}
+.row-tap{display:flex;align-items:center;gap:12px;padding:13px 16px;cursor:pointer;border-bottom:1px solid var(--bdr);-webkit-tap-highlight-color:transparent}
+.row-tap:last-child{border-bottom:none}
+.row-tap:active{background:rgba(255,255,255,.02)}
+.chev{color:var(--muted);font-size:14px;margin-left:auto;flex-shrink:0}
+.ic-box{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+
+/* ── GOLD BUTTON ── */
+.gbtn{background:var(--gold);color:var(--b0);border:none;border-radius:11px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:background .15s}
+.gbtn:active{background:var(--gold2)}
+.obtn{background:transparent;color:var(--text);border:1px solid var(--bdr);border-radius:11px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;cursor:pointer}
+.obtn:active{border-color:var(--bdr2);color:var(--gold2)}
+
+/* ── VERIFIED BADGE ── */
+.vbadge{display:flex;align-items:center;gap:6px;background:rgba(61,186,154,.07);border:1px solid rgba(61,186,154,.2);border-radius:7px;padding:5px 9px;font-size:10px;color:#7ad4b4;margin-top:3px}
+.vbadge strong{color:#b0ead2;font-weight:500}
+.vdate{color:var(--muted);margin-left:auto;font-size:9px}
+
+/* ── SOURCE LINKS ── */
+.srclink{display:inline-flex;align-items:center;gap:3px;background:rgba(196,148,30,.08);border:1px solid var(--bdr2);color:var(--gold2);font-size:9px;padding:2px 7px;border-radius:4px;text-decoration:none;margin:3px 3px 0 0}
+
+/* ── NOTIFICATION DOT ── */
+.notif{position:absolute;top:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:var(--red);font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:500}
+
+/* ── TYPING ── */
+.typing{display:flex;align-items:center;gap:4px;padding:12px 13px}
+.typing span{width:5px;height:5px;border-radius:50%;background:var(--muted);animation:bounce 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+
+/* ── HSCROLL ── */
+.hscr{display:flex;gap:8px;overflow-x:auto;padding:0 20px}
+.hscr::-webkit-scrollbar{display:none}
+.hchip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--bdr);color:var(--muted);background:var(--b2);white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.hchip.on{background:rgba(196,148,30,.15);border-color:var(--bdr2);color:var(--gold2)}
+
+/* ── SIDE LABEL ── */
+.sidelabel{
+  position:absolute;right:calc(50% - 268px);top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:10px;
+}
+.sidelabel .sl-title{font-family:'Playfair Display',serif;font-size:20px;color:rgba(196,148,30,.85);font-style:italic}
+.sidelabel .sl-hint{font-size:9px;color:rgba(255,255,255,.22);line-height:1.7;letter-spacing:.04em}
+.sl-btn{font-size:10px;color:rgba(255,255,255,.28);cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.06);white-space:nowrap;transition:color .2s}
+.sl-btn:hover{color:rgba(196,148,30,.8)}
+</style>
+</head>
+<body>
+<div class="frame">
+
+  <!-- ══════════════════════════════════════
+       PHONE SHELL
+  ══════════════════════════════════════ -->
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="btn-r"></div><div class="btn-l1"></div><div class="btn-l2"></div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 0 — DOMAIN SELECT   ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen on" id="s-domain">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div class="scr" style="display:flex;flex-direction:column">
+        <div style="padding:8px 24px 20px">
+          <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;display:flex;align-items:center;gap:8px"><span style="display:block;width:20px;height:1px;background:var(--gold)"></span>Welkom terug</div>
+          <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:8px">Goedemorgen,<br><em style="color:var(--gold)">Marco</em></div>
+          <div style="font-size:12px;color:var(--muted)">Kies uw domein — wij tonen de juiste experts en informatie</div>
+        </div>
+
+        <!-- domain grid -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:20px">
+
+          <div class="domain-tile" onclick="selectDomain('juridisch')" style="background:linear-gradient(135deg,#111830,#18202e);border:1px solid rgba(90,130,200,.18);border-radius:16px;padding:18px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:26px;margin-bottom:10px">⚖️</div>
+            <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px">Juridisch</div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.5">Contracten, arbeidsrecht, huurgeschillen, aansprakelijkheid</div>
+            <div style="margin-top:10px;font-size:9px;color:#8ab0e8">3 experts beschikbaar</div>
+          </div>
+
+          <div class="domain-tile" onclick="selectDomain('fiscaal')" style="background:linear-gradient(135deg,#1a1408,#222010);border:1px solid rgba(196,148,30,.18);border-radius:16px;padding:18px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:26px;margin-bottom:10px">💶</div>
+            <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px">Fiscaal</div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.5">BTW, erfbelasting, aftrekposten, aangifte, ZZP-fiscaal</div>
+            <div style="margin-top:10px;font-size:9px;color:var(--gold2)">2 experts beschikbaar</div>
+          </div>
+
+          <div class="domain-tile" onclick="selectDomain('financieel')" style="background:linear-gradient(135deg,#160e20,#1e1428);border:1px solid rgba(180,100,220,.18);border-radius:16px;padding:18px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:26px;margin-bottom:10px">📈</div>
+            <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px">Financieel</div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.5">Investeringen, financiering, subsidies, bedrijfsovername</div>
+            <div style="margin-top:10px;font-size:9px;color:#c88ae8">2 experts beschikbaar</div>
+          </div>
+
+          <div class="domain-tile" onclick="selectDomain('strategisch')" style="background:linear-gradient(135deg,#0c1a14,#121e18);border:1px solid rgba(61,186,154,.18);border-radius:16px;padding:18px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:26px;margin-bottom:10px">🎯</div>
+            <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px">Strategisch</div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.5">Bedrijfsoprichting, groei, businessplan, marktpositionering</div>
+            <div style="margin-top:10px;font-size:9px;color:var(--teal)">2 coaches beschikbaar</div>
+          </div>
+
+          <div class="domain-tile" onclick="selectDomain('personeel')" style="background:linear-gradient(135deg,#1a100a,#221808);border:1px solid rgba(220,120,80,.18);border-radius:16px;padding:18px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:26px;margin-bottom:10px">👥</div>
+            <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px">Personeel & HR</div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.5">Arbeidsovereenkomsten, ontslag, cao's, ziekteverzuim</div>
+            <div style="margin-top:10px;font-size:9px;color:#e8a070">2 experts beschikbaar</div>
+          </div>
+
+          <div class="domain-tile" onclick="selectDomain('wonen')" style="background:linear-gradient(135deg,#0a1614,#101e1c);border:1px solid rgba(80,180,160,.18);border-radius:16px;padding:18px 16px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:26px;margin-bottom:10px">🏠</div>
+            <div style="font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px">Wonen & Prive</div>
+            <div style="font-size:10px;color:var(--muted);line-height:1.5">Huurrecht, hypotheek, erfrecht, koopovereenkomsten</div>
+            <div style="margin-top:10px;font-size:9px;color:#70d4b8">2 experts beschikbaar</div>
+          </div>
+
+        </div>
+
+        <!-- confidentiality bar -->
+        <div style="margin:0 20px 24px;background:rgba(61,186,154,.05);border:1px solid rgba(61,186,154,.15);border-radius:11px;padding:11px 14px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:16px">🔐</span>
+          <div style="font-size:10px;color:var(--muted);line-height:1.5">
+            <span style="color:var(--teal);font-weight:500">Volledige geheimhouding gewaarborgd</span><br>
+            Wettelijk beroepsgeheim · NDA voor alle experts · AVG-conform
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 1 — HOME            ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-home">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div class="scr">
+
+        <!-- top bar with domain badge + account -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:0 20px 14px">
+          <div>
+            <div id="home-domain-chip"></div>
+            <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:400;color:var(--text);margin-top:6px">Goedemorgen, <em style="color:var(--gold)">Marco</em></div>
+          </div>
+          <div style="position:relative;cursor:pointer" onclick="nav('s-account')">
+            <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2a1e08,#1c1410);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;color:var(--gold)">MV</div>
+            <div class="notif">2</div>
+          </div>
+        </div>
+
+        <!-- sub card -->
+        <div style="margin:0 20px 18px;background:linear-gradient(135deg,#1c1608,#2a1e08);border:1px solid var(--bdr2);border-radius:18px;padding:20px;position:relative;overflow:hidden">
+          <div style="position:absolute;right:16px;bottom:6px;font-family:'Playfair Display',serif;font-size:68px;color:rgba(196,148,30,.07);pointer-events:none;line-height:1">W</div>
+          <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(196,148,30,.15);border:1px solid var(--bdr2);border-radius:7px;padding:4px 10px;font-size:11px;color:var(--gold2);margin-bottom:14px">⭐ Ondernemer-abonnement</div>
+          <div style="display:flex;gap:22px">
+            <div><div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text)">47</div><div style="font-size:10px;color:var(--muted)">vragen gesteld</div></div>
+            <div><div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text)">3</div><div style="font-size:10px;color:var(--muted)">consulten</div></div>
+            <div><div style="font-family:'Playfair Display',serif;font-size:22px;color:var(--text)">12</div><div style="font-size:10px;color:var(--muted)">documenten</div></div>
+          </div>
+        </div>
+
+        <!-- quick actions -->
+        <div style="padding:0 20px;margin-bottom:8px"><div class="seclabel">Snel starten</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:18px">
+          <div onclick="nav('s-chat')" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:20px;margin-bottom:8px">💬</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px">Vraag stellen</div>
+            <div style="font-size:10px;color:var(--muted)">AI of expert direct</div>
+          </div>
+          <div onclick="nav('s-consult')" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:20px;margin-bottom:8px">👤</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px">Expert boeken</div>
+            <div style="font-size:10px;color:var(--muted)">Online of in persoon</div>
+          </div>
+          <div onclick="nav('s-packages')" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:20px;margin-bottom:8px">📋</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px">Servicepakket</div>
+            <div style="font-size:10px;color:var(--muted)">Vast tarief</div>
+          </div>
+          <div onclick="nav('s-experts')" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="font-size:20px;margin-bottom:8px">🏛</div>
+            <div style="font-size:12px;font-weight:500;color:var(--text);margin-bottom:3px">Ons team</div>
+            <div style="font-size:10px;color:var(--muted)">Bekijk experts</div>
+          </div>
+        </div>
+
+        <!-- confidentiality -->
+        <div style="margin:0 20px 16px;background:rgba(61,186,154,.05);border:1px solid rgba(61,186,154,.15);border-radius:11px;padding:10px 13px;display:flex;align-items:center;gap:9px">
+          <span style="font-size:14px">🔐</span>
+          <div style="font-size:10px;color:var(--muted)"><span style="color:var(--teal);font-weight:500">Geheimhouding actief</span> · Beroepsgeheim · NDA · AVG</div>
+        </div>
+
+        <!-- experts online -->
+        <div style="padding:0 20px;margin-bottom:8px"><div class="seclabel">Nu beschikbaar</div></div>
+        <div class="hscr" style="margin-bottom:16px" id="home-experts-strip"></div>
+
+        <!-- recent -->
+        <div style="padding:0 20px;margin-bottom:8px"><div class="seclabel">Recente vragen</div></div>
+        <div class="card" style="margin:0 20px 24px;border-radius:14px" id="home-recent"></div>
+
+      </div>
+      <div class="bnav">
+        <div class="bni on" onclick="nav('s-home')"><div class="bic">🏠</div><div class="blb">Home</div></div>
+        <div class="bni" onclick="nav('s-chat')"><div class="bic">💬</div><div class="blb">Adviseur</div></div>
+        <div class="bni" onclick="nav('s-kennisbank')"><div class="bic">📚</div><div class="blb">Kennisbank</div></div>
+        <div class="bni" onclick="nav('s-experts')"><div class="bic">👥</div><div class="blb">Experts</div></div>
+        <div class="bni" onclick="nav('s-account')"><div class="bic">👤</div><div class="blb">Account</div></div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 2 — CHAT            ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-chat">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <!-- chat header -->
+      <div style="padding:0 18px 12px;display:flex;align-items:center;gap:10px">
+        <div style="font-size:20px;color:var(--sub);cursor:pointer;padding:4px" onclick="nav('s-home')">‹</div>
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#7a4e08);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:500;color:var(--b0);flex-shrink:0">W</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:500;color:var(--text)" id="chat-title">Wijzer Adviseur</div>
+          <div style="font-size:10px;color:var(--teal);display:flex;align-items:center;gap:4px"><span style="display:block;width:5px;height:5px;border-radius:50%;background:var(--teal)"></span>Altijd beschikbaar</div>
+        </div>
+        <div id="chat-domain-chip"></div>
+      </div>
+
+      <!-- mode toggle -->
+      <div style="display:flex;gap:7px;padding:0 16px 11px">
+        <div id="mode-ai" onclick="setMode('ai')" style="flex:1;text-align:center;padding:8px;border-radius:10px;font-size:11px;font-weight:500;cursor:pointer;background:rgba(196,148,30,.15);border:1px solid var(--bdr2);color:var(--gold2);-webkit-tap-highlight-color:transparent">🤖 AI-adviseur</div>
+        <div id="mode-human" onclick="setMode('human')" style="flex:1;text-align:center;padding:8px;border-radius:10px;font-size:11px;font-weight:500;cursor:pointer;background:var(--b2);border:1px solid var(--bdr);color:var(--muted);-webkit-tap-highlight-color:transparent">👤 Direct naar expert</div>
+      </div>
+
+      <!-- messages -->
+      <div style="flex:1;overflow-y:auto;padding:6px 15px 0;display:flex;flex-direction:column;gap:11px" id="chat-area">
+        <div style="text-align:center;font-size:10px;color:var(--muted);margin:6px 0">Vandaag · 21 mrt 2026</div>
+
+        <!-- user msg -->
+        <div style="display:flex;gap:7px;flex-direction:row-reverse">
+          <div style="width:25px;height:25px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--sub);flex-shrink:0;align-self:flex-end">MV</div>
+          <div style="max-width:78%">
+            <div style="padding:10px 13px;border-radius:14px;border-bottom-right-radius:3px;background:rgba(196,148,30,.17);color:var(--gold3);font-size:13px;line-height:1.55">Mijn moeder is onlangs overleden. Hoe kan ik de erfbelasting zo laag mogelijk houden?</div>
+            <div style="font-size:9px;color:var(--muted);text-align:right;padding:0 3px;margin-top:2px">09:24</div>
+          </div>
+        </div>
+
+        <!-- AI msg -->
+        <div style="display:flex;gap:7px">
+          <div style="width:25px;height:25px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#7a4e08);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:11px;color:var(--b0);flex-shrink:0;align-self:flex-end">W</div>
+          <div style="max-width:80%;display:flex;flex-direction:column;gap:4px">
+            <div style="padding:10px 13px;border-radius:14px;border-bottom-left-radius:3px;background:var(--b3);color:var(--text);font-size:12px;line-height:1.6">
+              Er zijn meerdere strategieën. De belangrijkste:<br><br>
+              · <strong>Vrijstelling kind:</strong> €26.230 in 2026<br>
+              · <strong>Ouder → kind jaarlijks:</strong> €6.908 belastingvrij<br>
+              · <strong>Eenmalig verhoogd</strong> (18–40 jaar): €33.129<br>
+              · <strong>Jubelton</strong> (eigen woning): afgeschaft<br><br>
+              Was er een testament opgesteld?
+              <div style="margin-top:6px">
+                <span class="srclink">📋 Successiewet 1956</span>
+                <span class="srclink">💡 Belastingdienst 2026</span>
+              </div>
+            </div>
+            <div class="vbadge"><span>✓</span><span>Geverifieerd door <strong>Mr. A. Lammers</strong>, Notaris</span><span class="vdate">Mrt 2026</span></div>
+            <div style="display:flex;align-items:center;gap:7px;background:rgba(196,148,30,.07);border:1px solid var(--bdr2);border-radius:9px;padding:7px 10px;font-size:10px;color:var(--gold2)">
+              <span>Grondige erfbelasting-analyse?</span>
+              <button onclick="nav('s-consult')" style="margin-left:auto;background:var(--gold);color:var(--b0);border:none;padding:4px 9px;border-radius:5px;font-size:9px;font-weight:500;cursor:pointer;flex-shrink:0">Boeken</button>
+            </div>
+            <div style="font-size:9px;color:var(--muted);padding:0 3px">09:24</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- input bar -->
+      <div style="background:var(--b1);border-top:1px solid var(--bdr);padding:10px 15px 26px;display:flex;gap:8px;align-items:flex-end">
+        <div style="flex:1;background:var(--b3);border:1px solid var(--bdr);border-radius:20px;display:flex;align-items:center;padding:8px 13px;gap:7px">
+          <span style="color:var(--muted);font-size:17px;cursor:pointer">+</span>
+          <input id="chat-input" style="flex:1;background:none;border:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none" placeholder="Stel uw volgende vraag…" onkeydown="sendChat(event)">
+        </div>
+        <button onclick="sendChat({key:'Enter'})" style="width:38px;height:38px;border-radius:50%;background:var(--gold);border:none;display:flex;align-items:center;justify-content:center;color:var(--b0);font-size:15px;cursor:pointer;flex-shrink:0">↑</button>
+      </div>
+
+      <div class="bnav">
+        <div class="bni" onclick="nav('s-home')"><div class="bic">🏠</div><div class="blb">Home</div></div>
+        <div class="bni on"><div class="bic">💬</div><div class="blb">Adviseur</div></div>
+        <div class="bni" onclick="nav('s-kennisbank')"><div class="bic">📚</div><div class="blb">Kennisbank</div></div>
+        <div class="bni" onclick="nav('s-experts')"><div class="bic">👥</div><div class="blb">Experts</div></div>
+        <div class="bni" onclick="nav('s-account')"><div class="bic">👤</div><div class="blb">Account</div></div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 3 — EXPERTS         ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-experts">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div style="padding:0 20px 12px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div class="pgtitle">Ons <em>team</em></div>
+          <div id="experts-domain-chip" style="margin-top:6px"></div>
+        </div>
+      </div>
+
+      <div style="padding:0 0 11px">
+        <div class="hscr" id="expert-filter-chips"></div>
+      </div>
+
+      <div class="scr" id="experts-list"></div>
+
+      <div class="bnav">
+        <div class="bni" onclick="nav('s-home')"><div class="bic">🏠</div><div class="blb">Home</div></div>
+        <div class="bni" onclick="nav('s-chat')"><div class="bic">💬</div><div class="blb">Adviseur</div></div>
+        <div class="bni" onclick="nav('s-kennisbank')"><div class="bic">📚</div><div class="blb">Kennisbank</div></div>
+        <div class="bni on"><div class="bic">👥</div><div class="blb">Experts</div></div>
+        <div class="bni" onclick="nav('s-account')"><div class="bic">👤</div><div class="blb">Account</div></div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 4 — CONSULT         ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-consult">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div style="display:flex;align-items:center;gap:6px;padding:0 20px 10px;cursor:pointer" onclick="goBack()">
+        <span style="font-size:16px;color:var(--gold2)">‹</span>
+        <span style="font-size:12px;color:var(--gold2)">Terug</span>
+      </div>
+      <div class="scr">
+        <div style="padding:0 20px 16px">
+          <div class="pgtitle">Consult <em>boeken</em></div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Kies hoe u wilt spreken</div>
+        </div>
+
+        <!-- selected expert card -->
+        <div id="consult-expert-card" style="margin:0 20px 18px"></div>
+
+        <div style="padding:0 20px;margin-bottom:10px"><div class="seclabel">Gesprekstype</div></div>
+
+        <div style="padding:0 20px;display:flex;flex-direction:column;gap:9px" id="consult-options">
+          <div class="co-opt" onclick="selOpt(this)" style="background:var(--b2);border:2px solid var(--gold);border-radius:13px;padding:14px;display:flex;align-items:center;gap:13px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="width:42px;height:42px;border-radius:11px;background:rgba(196,148,30,.1);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">💬</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">Beveiligde tekstchat</div><div style="font-size:10px;color:var(--muted)">Asynchroon · reactie binnen 4 uur</div></div>
+            <div style="text-align:right;flex-shrink:0"><span style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);display:block">Gratis</span><span style="font-size:9px;color:var(--muted)">inbegrepen</span></div>
+          </div>
+          <div class="co-opt" onclick="selOpt(this)" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;display:flex;align-items:center;gap:13px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="width:42px;height:42px;border-radius:11px;background:rgba(196,148,30,.1);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">🎥</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">Videogesprek — junior</div><div style="font-size:10px;color:var(--muted)">Online · beveiligd · tot 60 min</div></div>
+            <div style="text-align:right;flex-shrink:0"><span style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);display:block">€55</span><span style="font-size:9px;color:var(--muted)">per uur</span></div>
+          </div>
+          <div class="co-opt" onclick="selOpt(this)" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;display:flex;align-items:center;gap:13px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="width:42px;height:42px;border-radius:11px;background:rgba(196,148,30,.1);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">🎥</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">Videogesprek — senior</div><div style="font-size:10px;color:var(--muted)">Online · beveiligd · tot 60 min</div></div>
+            <div style="text-align:right;flex-shrink:0"><span style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);display:block">€120</span><span style="font-size:9px;color:var(--muted)">per uur</span></div>
+          </div>
+          <div class="co-opt" onclick="selOpt(this)" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;display:flex;align-items:center;gap:13px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="width:42px;height:42px;border-radius:11px;background:rgba(196,148,30,.1);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">🏛</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">Persoonlijk — junior</div><div style="font-size:10px;color:var(--muted)">Op kantoor of bij u · incl. reistijd</div></div>
+            <div style="text-align:right;flex-shrink:0"><span style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);display:block">€85</span><span style="font-size:9px;color:var(--muted)">per uur</span></div>
+          </div>
+          <div class="co-opt" onclick="selOpt(this)" style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:14px;display:flex;align-items:center;gap:13px;cursor:pointer;-webkit-tap-highlight-color:transparent">
+            <div style="width:42px;height:42px;border-radius:11px;background:rgba(196,148,30,.1);display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0">🏛</div>
+            <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--text)">Persoonlijk — senior</div><div style="font-size:10px;color:var(--muted)">Op kantoor of bij u · incl. reistijd</div></div>
+            <div style="text-align:right;flex-shrink:0"><span style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold);display:block">€150</span><span style="font-size:9px;color:var(--muted)">per uur</span></div>
+          </div>
+        </div>
+
+        <div style="margin:14px 20px;background:rgba(61,186,154,.05);border:1px solid rgba(61,186,154,.16);border-radius:11px;padding:11px 13px;display:flex;gap:9px">
+          <span style="font-size:16px;flex-shrink:0">🔐</span>
+          <div><div style="font-size:11px;font-weight:500;color:var(--teal)">Volledig vertrouwelijk</div><div style="font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5">Wettelijk beroepsgeheim · NDA ondertekend · gegevens worden niet bewaard zonder toestemming</div></div>
+        </div>
+
+        <button onclick="confirmBooking()" class="gbtn" style="margin:0 20px;width:calc(100% - 40px);padding:14px">Consult bevestigen →</button>
+        <div style="text-align:center;font-size:10px;color:var(--muted);margin:10px 20px 28px">Annuleren tot 2 uur voor aanvang · Geen verborgen kosten</div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 5 — PACKAGES        ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-packages">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div style="display:flex;align-items:center;gap:6px;padding:0 20px 10px;cursor:pointer" onclick="goBack()">
+        <span style="font-size:16px;color:var(--gold2)">‹</span><span style="font-size:12px;color:var(--gold2)">Terug</span>
+      </div>
+      <div class="scr">
+        <div style="padding:0 20px 14px"><div class="pgtitle">Service<em>pakketten</em></div><div style="font-size:12px;color:var(--muted);margin-top:4px">Vast tarief — altijd vooraf duidelijk</div></div>
+        <div style="padding:0 0 11px"><div class="hscr"><div class="hchip on">Alle</div><div class="hchip">Erfbelasting</div><div class="hchip">Bedrijf</div><div class="hchip">Juridisch</div><div class="hchip">AVG</div></div></div>
+
+        <div id="packages-list" style="padding:0 20px;display:flex;flex-direction:column;gap:10px;margin-bottom:28px"></div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 6 — KENNISBANK      ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-kennisbank">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div style="padding:0 20px 10px">
+        <div class="pgtitle">Kennis<em>bank</em></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px">Expert-gevalideerde artikelen</div>
+      </div>
+
+      <!-- search bar -->
+      <div style="padding:0 20px 12px">
+        <div style="display:flex;align-items:center;gap:8px;background:var(--b2);border:1px solid var(--bdr);border-radius:11px;padding:9px 13px">
+          <span style="font-size:14px;color:var(--muted)">🔍</span>
+          <input id="kb-search" style="flex:1;background:none;border:none;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none" placeholder="Zoek artikel, wet, begrip…" oninput="searchKb(this.value)">
+        </div>
+      </div>
+
+      <!-- category chips -->
+      <div style="padding:0 0 12px">
+        <div class="hscr" id="kb-cats">
+          <div class="hchip on" onclick="filterKb(this,'alle')">Alle</div>
+          <div class="hchip" onclick="filterKb(this,'juridisch')">⚖️ Juridisch</div>
+          <div class="hchip" onclick="filterKb(this,'fiscaal')">💶 Fiscaal</div>
+          <div class="hchip" onclick="filterKb(this,'financieel')">📈 Financieel</div>
+          <div class="hchip" onclick="filterKb(this,'strategisch')">🎯 Strategisch</div>
+          <div class="hchip" onclick="filterKb(this,'personeel')">👥 Personeel</div>
+          <div class="hchip" onclick="filterKb(this,'wonen')">🏠 Wonen</div>
+        </div>
+      </div>
+
+      <div class="scr" id="kb-list"></div>
+
+      <div class="bnav">
+        <div class="bni" onclick="nav('s-home')"><div class="bic">🏠</div><div class="blb">Home</div></div>
+        <div class="bni" onclick="nav('s-chat')"><div class="bic">💬</div><div class="blb">Adviseur</div></div>
+        <div class="bni on"><div class="bic">📚</div><div class="blb">Kennisbank</div></div>
+        <div class="bni" onclick="nav('s-experts')"><div class="bic">👥</div><div class="blb">Experts</div></div>
+        <div class="bni" onclick="nav('s-account')"><div class="bic">👤</div><div class="blb">Account</div></div>
+      </div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 7 — ARTICLE DETAIL  ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-article">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div style="display:flex;align-items:center;gap:6px;padding:0 20px 10px;cursor:pointer" onclick="goBack()">
+        <span style="font-size:16px;color:var(--gold2)">‹</span>
+        <span style="font-size:12px;color:var(--gold2)">Kennisbank</span>
+      </div>
+      <div class="scr" id="article-body"></div>
+    </div>
+
+    <!-- ╔══════════════════════════════╗
+         ║  SCREEN 8 — ACCOUNT         ║
+         ╚══════════════════════════════╝ -->
+    <div class="screen" id="s-account">
+      <div class="sbar"><span class="sbar-t">9:41</span><div class="sbar-r"><span>▲▲▲</span><span>🔋</span></div></div>
+      <div class="scr">
+        <div style="padding:0 20px 14px"><div class="pgtitle">Account</div></div>
+
+        <div style="display:flex;flex-direction:column;align-items:center;padding:0 20px 20px;gap:10px">
+          <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#2a1e08,#1c1410);border:2px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:26px;color:var(--gold)">MV</div>
+          <div style="text-align:center">
+            <div style="font-family:'Playfair Display',serif;font-size:19px;color:var(--text)">Marco van Houten</div>
+            <div style="font-size:11px;color:var(--muted)">marco@vanhouten-bv.nl</div>
+          </div>
+        </div>
+
+        <div style="margin:0 20px 16px;background:linear-gradient(135deg,#1c1608,#2a1e08);border:1px solid var(--bdr2);border-radius:13px;padding:14px 16px;display:flex;align-items:center;gap:13px">
+          <span style="font-size:22px">⭐</span>
+          <div style="flex:1"><div style="font-size:13px;font-weight:500;color:var(--gold2)">Ondernemer-abonnement</div><div style="font-size:10px;color:var(--muted)">Actief · alle zakelijke functies</div></div>
+          <div style="text-align:right"><div style="font-size:9px;color:var(--muted)">Volgende afschrijving</div><div style="font-size:12px;color:var(--text);font-weight:500">1 apr 2026</div></div>
+        </div>
+
+        <div style="margin:0 20px 16px;background:rgba(61,186,154,.05);border:1px solid rgba(61,186,154,.15);border-radius:11px;padding:11px 13px;display:flex;gap:9px">
+          <span style="font-size:16px">🔐</span>
+          <div><div style="font-size:11px;font-weight:500;color:var(--teal)">Uw geheimhouding is actief</div><div style="font-size:10px;color:var(--muted);margin-top:2px;line-height:1.5">Beroepsgeheim · NDA experts · AVG-conform · Recht op verwijdering</div></div>
+        </div>
+
+        <!-- domain switch -->
+        <div style="padding:0 20px;margin-bottom:8px"><div class="seclabel">Huidig domein</div></div>
+        <div style="margin:0 20px 16px;background:var(--b2);border:1px solid var(--bdr);border-radius:11px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+          <div id="account-domain-chip"></div>
+          <button onclick="nav('s-domain')" class="obtn" style="padding:6px 13px;font-size:11px">Wisselen</button>
+        </div>
+
+        <div style="padding:0 20px;margin-bottom:8px"><div class="seclabel">Mijn diensten</div></div>
+        <div class="card" style="margin:0 20px 16px;border-radius:13px">
+          <div class="row-tap" onclick="nav('s-chat')"><div class="ic-box" style="background:rgba(196,148,30,.1)">💬</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">Mijn gesprekken</div><div style="font-size:10px;color:var(--muted)">47 vragen gesteld</div></div><span class="chev">›</span></div>
+          <div class="row-tap" onclick="nav('s-consult')"><div class="ic-box" style="background:rgba(196,148,30,.1)">👤</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">Mijn consulten</div><div style="font-size:10px;color:var(--muted)">3 geboekt · 1 aankomend</div></div><div class="notif" style="position:relative;top:auto;right:auto;margin-right:6px">1</div><span class="chev">›</span></div>
+          <div class="row-tap" onclick="nav('s-packages')"><div class="ic-box" style="background:rgba(196,148,30,.1)">📋</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">Servicepakketten</div><div style="font-size:10px;color:var(--muted)">1 actief pakket</div></div><span class="chev">›</span></div>
+          <div class="row-tap"><div class="ic-box" style="background:rgba(255,255,255,.05)">📄</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">Documenten</div><div style="font-size:10px;color:var(--muted)">12 gegenereerde documenten</div></div><span class="chev">›</span></div>
+        </div>
+
+        <div style="padding:0 20px;margin-bottom:8px"><div class="seclabel">Instellingen</div></div>
+        <div class="card" style="margin:0 20px 28px;border-radius:13px">
+          <div class="row-tap"><div class="ic-box" style="background:rgba(61,186,154,.1)">🔐</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">Privacy & geheimhouding</div><div style="font-size:10px;color:var(--muted)">Gegevensbeheer · AVG-rechten</div></div><span class="chev">›</span></div>
+          <div class="row-tap"><div class="ic-box" style="background:rgba(255,255,255,.05)">🔔</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">Meldingen</div><div style="font-size:10px;color:var(--muted)">Wetgeving-alerts actief</div></div><span class="chev">›</span></div>
+          <div class="row-tap"><div class="ic-box" style="background:rgba(196,148,30,.1)">⭐</div><div style="flex:1"><div style="font-size:12px;font-weight:500;color:var(--text)">Abonnement beheren</div><div style="font-size:10px;color:var(--muted)">Upgrade naar Zakelijk</div></div><span class="chev">›</span></div>
+          <div class="row-tap"><div class="ic-box" style="background:rgba(224,85,85,.1)">↩</div><div><div style="font-size:12px;font-weight:500;color:var(--red)">Uitloggen</div></div></div>
+        </div>
+      </div>
+      <div class="bnav">
+        <div class="bni" onclick="nav('s-home')"><div class="bic">🏠</div><div class="blb">Home</div></div>
+        <div class="bni" onclick="nav('s-chat')"><div class="bic">💬</div><div class="blb">Adviseur</div></div>
+        <div class="bni" onclick="nav('s-kennisbank')"><div class="bic">📚</div><div class="blb">Kennisbank</div></div>
+        <div class="bni" onclick="nav('s-experts')"><div class="bic">👥</div><div class="blb">Experts</div></div>
+        <div class="bni on"><div class="bic">👤</div><div class="blb">Account</div></div>
+      </div>
+    </div>
+
+    <!-- BOOKING CONFIRMATION OVERLAY -->
+    <div id="overlay-confirm" style="position:absolute;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:300">
+      <div style="background:var(--b2);border:1px solid var(--bdr2);border-radius:20px;padding:28px 22px;margin:24px;text-align:center">
+        <div style="font-size:40px;margin-bottom:12px">✅</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:8px">Consult bevestigd</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:20px">Uw verzoek is ontvangen. U krijgt binnen 30 minuten een bevestiging op marco@vanhouten-bv.nl.<br><br>Volledig vertrouwelijk — wettelijk beroepsgeheim.</div>
+        <button onclick="closeOverlay()" class="gbtn" style="width:100%;padding:13px;font-size:14px">Terug naar home</button>
+      </div>
+    </div>
+
+  </div><!-- /phone -->
+
+  <!-- side navigation hints -->
+  <div class="sidelabel">
+    <div class="sl-title">Wijzer</div>
+    <div class="sl-hint">App prototype · 2026<br>Tap om te navigeren</div>
+    <div class="sl-btn" onclick="nav('s-domain')">🏠 Domein kiezen</div>
+    <div class="sl-btn" onclick="nav('s-home')">🏠 Home</div>
+    <div class="sl-btn" onclick="nav('s-chat')">💬 Adviseur</div>
+    <div class="sl-btn" onclick="nav('s-kennisbank')">📚 Kennisbank</div>
+    <div class="sl-btn" onclick="nav('s-experts')">👥 Experts</div>
+    <div class="sl-btn" onclick="nav('s-account')">👤 Account</div>
+    <div class="sl-btn" onclick="nav('s-packages')">📋 Pakketten</div>
+  </div>
+
+</div><!-- /frame -->
+
+<script>
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+var appState = { domain: null, screen: 's-domain', stack: [] };
+
+// ─────────────────────────────────────────────
+//  DOMAIN DATA
+// ─────────────────────────────────────────────
+var domains = {
+  juridisch: {
+    label: 'Juridisch', icon: '⚖️', color: '#8ab0e8', bg: 'rgba(90,130,200,.1)', border: 'rgba(90,130,200,.25)',
+    experts: ['rk','mh','al','je'],
+    recent: [
+      { ic:'⚖️', q:'Mag ik een concurrentiebeding opnemen bij tijdelijk contract?', by:'Mr. Hartman', date:'Ma 17 mrt' },
+      { ic:'📄', q:'Kan ik mijn verhuurder aansprakelijk stellen voor schade?', by:'Mr. Lammers', date:'Di 11 mrt' }
+    ]
+  },
+  fiscaal: {
+    label: 'Fiscaal', icon: '💶', color: '#ddb84e', bg: 'rgba(196,148,30,.1)', border: 'rgba(196,148,30,.22)',
+    experts: ['rk','sv','al'],
+    recent: [
+      { ic:'💶', q:'Wat zijn de BTW-regels voor diensten naar Duitsland?', by:'Drs. van Dijk', date:'Gisteren' },
+      { ic:'💰', q:'Mijn moeder is onlangs overleden. Hoe erfbelasting minimaliseren?', by:'Mr. Lammers', date:'Vr 14 mrt' }
+    ]
+  },
+  financieel: {
+    label: 'Financieel', icon: '📈', color: '#c88ae8', bg: 'rgba(180,100,220,.1)', border: 'rgba(180,100,220,.22)',
+    experts: ['rk','bn','lv'],
+    recent: [
+      { ic:'📈', q:'Welke subsidies zijn beschikbaar voor mijn tech-startup?', by:'B. Nkosi MBA', date:'Vr 14 mrt' },
+      { ic:'💹', q:'Hoe beoordeel ik de risico\'s van een bedrijfsovername?', by:'Drs. Koopman', date:'Wo 12 mrt' }
+    ]
+  },
+  strategisch: {
+    label: 'Strategisch', icon: '🎯', color: '#3dba9a', bg: 'rgba(61,186,154,.1)', border: 'rgba(61,186,154,.22)',
+    experts: ['bn','lv','je'],
+    recent: [
+      { ic:'🎯', q:'Eenmanszaak omzetten naar BV — wanneer financieel aantrekkelijk?', by:'Drs. Koopman', date:'Wo 12 mrt' },
+      { ic:'🚀', q:'Hoe stel ik een investeerdersdeck op voor seed-ronde?', by:'L. van Wijk', date:'Ma 10 mrt' }
+    ]
+  },
+  personeel: {
+    label: 'Personeel & HR', icon: '👥', color: '#e8a070', bg: 'rgba(220,120,80,.1)', border: 'rgba(220,120,80,.22)',
+    experts: ['mh','je'],
+    recent: [
+      { ic:'👥', q:'Wat zijn de rechten van een werknemer bij langdurige ziekte?', by:'Mr. Hartman', date:'Do 13 mrt' },
+      { ic:'📋', q:'Kan ik een medewerker op staande voet ontslaan wegens diefstal?', by:'J. Evers LLB', date:'Di 11 mrt' }
+    ]
+  },
+  wonen: {
+    label: 'Wonen & Privé', icon: '🏠', color: '#70d4b8', bg: 'rgba(80,180,160,.1)', border: 'rgba(80,180,160,.22)',
+    experts: ['al','sv','je'],
+    recent: [
+      { ic:'🏠', q:'Wat zijn mijn rechten als huurder bij gebreken in de woning?', by:'Mr. Lammers', date:'Za 15 mrt' },
+      { ic:'📜', q:'Hoe werkt de erfenis bij overlijden zonder testament?', by:'Mr. Lammers', date:'Do 6 mrt' }
+    ]
+  }
+};
+
+var expertData = {
+  rk: { init:'RK', name:'Drs. R. Koopman', cred:'Register Accountant RA · Senior', dom:'Boekhouden, erfbelasting, jaarrekeningen, bedrijfsovername', rate:'€120/uur', stars:'★★★★★', rating:'4.9', count:'312', online:true, bg:'linear-gradient(135deg,#1a1412,#2a1e0a)', color:'#c4941e' },
+  mh: { init:'MH', name:'Mr. M. Hartman', cred:'Advocaat Arbeidsrecht · Senior', dom:'Arbeidscontracten, ontslag, cao\'s, non-concurrentie, conflicten', rate:'€120/uur', stars:'★★★★★', rating:'4.8', count:'247', online:true, bg:'linear-gradient(135deg,#0f1520,#1a2030)', color:'#8ab0d4' },
+  sv: { init:'SV', name:'Drs. S. van Dijk', cred:'Belastingadviseur RB · Senior', dom:'BTW, IB-aangifte, erfbelasting, zzp-fiscaal, schijnzelfstandigheid', rate:'€120/uur', stars:'★★★★★', rating:'4.9', count:'418', online:false, bg:'linear-gradient(135deg,#0f1a14,#1a2c1a)', color:'#6ab48a' },
+  al: { init:'AL', name:'Mr. A. Lammers', cred:'Notaris Civiel Recht · Senior', dom:'Erfrecht, testament, huurrecht, koopovereenkomsten, vastgoed', rate:'€120/uur', stars:'★★★★★', rating:'4.7', count:'189', online:true, bg:'linear-gradient(135deg,#1a1418,#2a1a22)', color:'#c48abd' },
+  bn: { init:'BN', name:'B. Nkosi MBA', cred:'Bedrijfscoach & Ondernemer', dom:'Oprichting, businessplan, financiering, scaling, marktpositionering', rate:'€120/uur', stars:'★★★★★', rating:'4.9', count:'156', online:true, bg:'linear-gradient(135deg,#1a1208,#2a2010)', color:'#d4a848', coach:true },
+  lv: { init:'LV', name:'L. van Wijk', cred:'Serial Entrepreneur · Coach', dom:'3× exit, franchise, team building, groeistrategie MKB', rate:'€120/uur', stars:'★★★★★', rating:'4.8', count:'203', online:true, bg:'linear-gradient(135deg,#10181a,#142828)', color:'#48b4b4', coach:true },
+  je: { init:'JE', name:'J. Evers LLB', cred:'Jurist i.o. · onder supervisie Hartman', dom:'Arbeidsrecht, contractbeoordeling, algemene juridische vragen', rate:'€55/uur', stars:'★★★★☆', rating:'4.6', count:'89', online:true, bg:'linear-gradient(135deg,#14141c,#1c1c28)', color:'#a0a0c8', junior:true }
+};
+
+var packages = [
+  { title:'Erfbelasting analyse & optimalisatie', price:'Situationeel', sub:'gratis intake · o.b.v. boedel', desc:'Volledige doorrekening van vrijstellingen, schenkingen en aanvaardingsvorm. Tarief vooraf overeengekomen.', gold:true },
+  { title:'Bedrijfsoprichting volledig ontzorgd', price:'v.a. €450', sub:'vaste prijs · incl. btw', desc:'Rechtsvorm-advies, statuten, KvK-inschrijving en eerste belasting-setup.', gold:false },
+  { title:'Arbeidscontract beoordeling & advies', price:'€150', sub:'vast tarief · incl. btw', desc:'Advocaat beoordeelt uw contract op risico\'s. Incl. rapport en 30 min. nabespreking.', gold:false },
+  { title:'AVG compliance audit MKB', price:'€350', sub:'vast tarief · incl. btw', desc:'Verwerkingsregister, privacybeleid, risicoscan en actielijst naleving.', gold:false },
+  { title:'Bedrijfsovername begeleiding', price:'Situationeel', sub:'gratis intake · o.b.v. transactie', desc:'Due diligence, overnamecontract, fiscale structurering en notarieel traject.', gold:true },
+  { title:'Huurcontract beoordeling', price:'€95', sub:'vast tarief · incl. btw', desc:'Jurist checkt alle clausules. Incl. schriftelijke bevindingen en 20 min. toelichting.', gold:false }
+];
+
+// ─────────────────────────────────────────────
+//  NAVIGATION
+// ─────────────────────────────────────────────
+function nav(id) {
+  var prev = document.getElementById(appState.screen);
+  var next = document.getElementById(id);
+  if (!next || id === appState.screen) return;
+  if (prev) prev.classList.remove('on');
+  next.classList.add('on');
+  appState.stack.push(appState.screen);
+  appState.screen = id;
+  // sync bottom nav active state
+  var bnavScreens = ['s-home','s-chat','s-kennisbank','s-experts','s-account'];
+  var bnavIdx = bnavScreens.indexOf(id);
+  document.querySelectorAll('.bnav').forEach(function(bnav) {
+    var items = bnav.querySelectorAll('.bni');
+    items.forEach(function(item, i) {
+      if (bnavIdx >= 0) {
+        item.classList.toggle('on', i === bnavIdx);
+      }
+    });
+  });
+  // render dynamic content
+  if (id === 's-home') renderHome();
+  if (id === 's-experts') renderExperts();
+  if (id === 's-packages') renderPackages();
+  if (id === 's-consult') renderConsultExpert();
+}
+
+function goBack() {
+  if (appState.stack.length === 0) return;
+  var prev = appState.stack.pop();
+  var from = document.getElementById(appState.screen);
+  var to = document.getElementById(prev);
+  if (!from || !to) return;
+  from.classList.remove('on');
+  to.classList.add('on');
+  appState.screen = prev;
+}
+
+// ─────────────────────────────────────────────
+//  DOMAIN SELECTION
+// ─────────────────────────────────────────────
+function selectDomain(d) {
+  appState.domain = d;
+  appState.stack = [];
+  // activate domain tile feedback
+  document.querySelectorAll('.domain-tile').forEach(function(t) { t.style.opacity = '.5'; });
+  setTimeout(function() {
+    document.querySelectorAll('.domain-tile').forEach(function(t) { t.style.opacity = '1'; });
+    nav('s-home');
+  }, 150);
+}
+
+function domainChipHTML(d) {
+  if (!d) return '';
+  var info = domains[d];
+  return '<span style="display:inline-flex;align-items:center;gap:5px;background:' + info.bg + ';border:1px solid ' + info.border + ';color:' + info.color + ';font-size:10px;padding:3px 9px;border-radius:20px;font-weight:500">' + info.icon + ' ' + info.label + '</span>';
+}
+
+// ─────────────────────────────────────────────
+//  RENDER: HOME
+// ─────────────────────────────────────────────
+function renderHome() {
+  var d = appState.domain;
+  var info = d ? domains[d] : null;
+  // domain chip
+  document.getElementById('home-domain-chip').innerHTML = domainChipHTML(d);
+  // expert strip
+  var strip = document.getElementById('home-experts-strip');
+  var expIds = info ? info.experts : Object.keys(expertData);
+  strip.innerHTML = expIds.map(function(id) {
+    var e = expertData[id];
+    var onlineDot = e.online ? 'border:2px solid #3dba9a' : 'border:2px solid rgba(255,255,255,.06)';
+    var onlineText = e.online ? '· Online' : '· Bezet';
+    return '<div onclick="nav(\'s-consult\')" style="flex-shrink:0;width:68px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;-webkit-tap-highlight-color:transparent">'
+      + '<div style="width:50px;height:50px;border-radius:50%;background:' + e.bg + ';display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:15px;color:' + e.color + ';' + onlineDot + '">' + e.init + '</div>'
+      + '<div style="font-size:9px;color:var(--sub);text-align:center;line-height:1.3">' + e.name.split(' ').slice(-1)[0] + '</div>'
+      + '<div style="font-size:9px;color:var(--muted)">' + onlineText + '</div>'
+      + '</div>';
+  }).join('');
+  // recent
+  var recent = document.getElementById('home-recent');
+  var items = info ? info.recent : [
+    { ic:'💶', q:'Wat zijn de BTW-regels voor diensten naar Duitsland?', by:'Drs. van Dijk', date:'Gisteren' },
+    { ic:'⚖️', q:'Mag ik een concurrentiebeding opnemen bij tijdelijk contract?', by:'Mr. Hartman', date:'Ma 17 mrt' },
+    { ic:'🏢', q:'Eenmanszaak omzetten naar BV — wanneer aantrekkelijk?', by:'Drs. Koopman', date:'Wo 12 mrt' }
+  ];
+  recent.innerHTML = items.map(function(item, i) {
+    var last = i === items.length - 1 ? 'border-bottom:none' : '';
+    return '<div onclick="nav(\'s-chat\')" style="display:flex;align-items:flex-start;gap:11px;padding:13px 15px;border-bottom:1px solid var(--bdr);cursor:pointer;-webkit-tap-highlight-color:transparent;' + last + '">'
+      + '<div style="width:34px;height:34px;border-radius:9px;background:rgba(196,148,30,.1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">' + item.ic + '</div>'
+      + '<div style="flex:1"><div style="font-size:12px;color:var(--text);line-height:1.4;margin-bottom:3px">' + item.q + '</div>'
+      + '<div style="font-size:10px;color:var(--muted);display:flex;gap:7px"><span style="color:#7ad4b4;font-size:9px">✓ ' + item.by + '</span><span>' + item.date + '</span></div></div>'
+      + '<span style="color:var(--muted);font-size:13px;align-self:center">›</span></div>';
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+//  RENDER: EXPERTS
+// ─────────────────────────────────────────────
+function renderExperts() {
+  var d = appState.domain;
+  var info = d ? domains[d] : null;
+  document.getElementById('experts-domain-chip').innerHTML = domainChipHTML(d);
+  var expIds = info ? info.experts : Object.keys(expertData);
+  // filter chips
+  var chips = document.getElementById('expert-filter-chips');
+  chips.innerHTML = '<div class="hchip on">Alle</div>'
+    + ['Senior','Junior','Bedrijfscoach'].map(function(l) {
+      return '<div class="hchip" onclick="filterExperts(this,\'' + l + '\')">' + l + '</div>';
+    }).join('');
+  renderExpertList(expIds);
+}
+
+function renderExpertList(ids) {
+  var list = document.getElementById('experts-list');
+  // separate senior/junior/coach
+  var seniors = ids.filter(function(id) { return !expertData[id].junior && !expertData[id].coach; });
+  var coaches = ids.filter(function(id) { return expertData[id].coach; });
+  var juniors = ids.filter(function(id) { return expertData[id].junior; });
+  var html = '';
+  function addSection(label, arr) {
+    if (!arr.length) return;
+    if (label) html += '<div style="padding:12px 20px 6px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted)">' + label + '</div></div>';
+    arr.forEach(function(id) {
+      var e = expertData[id];
+      var onlineDot = e.online ? 'background:var(--teal)' : 'background:var(--muted)';
+      var onlineLabel = e.online ? 'Online' : 'Bezet';
+      var badge = e.coach ? '<span style="background:rgba(196,148,30,.12);color:var(--gold2);font-size:9px;padding:1px 6px;border-radius:4px;border:1px solid var(--bdr2);margin-left:5px">Coach</span>' : '';
+      var jbadge = e.junior ? '<span style="background:rgba(61,186,154,.08);color:var(--teal);font-size:9px;padding:1px 6px;border-radius:4px;border:1px solid rgba(61,186,154,.2);margin-left:5px">Junior</span>' : '';
+      html += '<div onclick="nav(\'s-consult\')" style="display:flex;gap:13px;padding:15px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;-webkit-tap-highlight-color:transparent">'
+        + '<div style="position:relative;flex-shrink:0">'
+        + '<div style="width:48px;height:48px;border-radius:50%;background:' + e.bg + ';display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:15px;color:' + e.color + '">' + e.init + '</div>'
+        + '<div style="position:absolute;bottom:1px;right:1px;width:11px;height:11px;border-radius:50%;' + onlineDot + ';border:2px solid var(--b0)"></div>'
+        + '</div>'
+        + '<div style="flex:1">'
+        + '<div style="font-size:13px;font-weight:500;color:var(--text)">' + e.name + badge + jbadge + '</div>'
+        + '<div style="font-size:10px;color:var(--gold2);margin-bottom:4px">' + e.cred + '</div>'
+        + '<div style="font-size:10px;color:var(--muted);line-height:1.45;margin-bottom:6px">' + e.dom + '</div>'
+        + '<div style="display:flex;align-items:center;gap:8px">'
+        + '<span style="color:#e0b840;font-size:10px">' + e.stars + '</span>'
+        + '<span style="font-size:10px;color:var(--muted)">' + e.rating + ' · ' + e.count + ' consulten</span>'
+        + '<span style="font-size:11px;color:var(--gold);font-weight:500;margin-left:auto">' + e.rate + '</span>'
+        + '</div></div></div>';
+    });
+  }
+  addSection('', seniors);
+  if (coaches.length) addSection('Bedrijfscoaches', coaches);
+  if (juniors.length) addSection('Junior experts · Persoonlijk Pro', juniors);
+  html += '<div style="height:20px"></div>';
+  list.innerHTML = html;
+}
+
+function filterExperts(el, label) {
+  document.querySelectorAll('#expert-filter-chips .hchip').forEach(function(c) { c.classList.remove('on'); });
+  el.classList.add('on');
+  var d = appState.domain;
+  var info = d ? domains[d] : null;
+  var allIds = info ? info.experts : Object.keys(expertData);
+  if (label === 'Alle') { renderExpertList(allIds); return; }
+  var filtered = allIds.filter(function(id) {
+    if (label === 'Junior') return expertData[id].junior;
+    if (label === 'Bedrijfscoach') return expertData[id].coach;
+    if (label === 'Senior') return !expertData[id].junior && !expertData[id].coach;
+    return true;
+  });
+  renderExpertList(filtered);
+}
+
+// ─────────────────────────────────────────────
+//  RENDER: CONSULT EXPERT CARD
+// ─────────────────────────────────────────────
+function renderConsultExpert() {
+  var d = appState.domain;
+  var info = d ? domains[d] : null;
+  var firstId = info ? info.experts[0] : 'rk';
+  var e = expertData[firstId];
+  var el = document.getElementById('consult-expert-card');
+  el.innerHTML = '<div style="background:var(--b2);border:1px solid var(--bdr2);border-radius:13px;padding:13px 15px;display:flex;align-items:center;gap:11px">'
+    + '<div style="width:42px;height:42px;border-radius:50%;background:' + e.bg + ';display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:15px;color:' + e.color + ';flex-shrink:0">' + e.init + '</div>'
+    + '<div><div style="font-size:13px;font-weight:500;color:var(--text)">' + e.name + '</div>'
+    + '<div style="font-size:10px;color:var(--gold2)">' + e.cred + '</div>'
+    + '<div style="display:flex;gap:6px;margin-top:4px"><span style="display:inline-flex;align-items:center;gap:4px;background:rgba(61,186,154,.1);border:1px solid rgba(61,186,154,.2);color:var(--teal);font-size:9px;padding:2px 8px;border-radius:20px">● Nu beschikbaar</span><span style="font-size:9px;color:var(--muted);align-self:center">4.9 · ' + e.count + ' consulten</span></div>'
+    + '</div></div>';
+}
+
+// ─────────────────────────────────────────────
+//  RENDER: PACKAGES
+// ─────────────────────────────────────────────
+function renderPackages() {
+  var list = document.getElementById('packages-list');
+  list.innerHTML = packages.map(function(p) {
+    var btn = p.gold
+      ? '<button class="gbtn" style="width:100%;padding:10px;font-size:12px;margin-top:12px">Gratis intake aanvragen</button>'
+      : '<button class="obtn" style="width:100%;padding:10px;font-size:12px;margin-top:12px">Direct boeken</button>';
+    return '<div style="background:var(--b2);border:1px solid var(--bdr);border-radius:13px;padding:15px">'
+      + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px">'
+      + '<div style="font-size:13px;font-weight:500;color:var(--text);line-height:1.3">' + p.title + '</div>'
+      + '<div style="text-align:right;flex-shrink:0"><div style="font-family:\'Playfair Display\',serif;font-size:15px;color:var(--gold)">' + p.price + '</div><div style="font-size:9px;color:var(--muted)">' + p.sub + '</div></div>'
+      + '</div>'
+      + '<div style="font-size:11px;color:var(--muted);line-height:1.55">' + p.desc + '</div>'
+      + btn + '</div>';
+  }).join('');
+}
+
+// ─────────────────────────────────────────────
+//  CONSULT / CHAT HELPERS
+// ─────────────────────────────────────────────
+function selOpt(el) {
+  document.querySelectorAll('.co-opt').forEach(function(e) {
+    e.style.borderWidth = '1px';
+    e.style.borderColor = 'var(--bdr)';
+    e.style.background = 'var(--b2)';
+  });
+  el.style.borderWidth = '2px';
+  el.style.borderColor = 'var(--gold)';
+  el.style.background = 'rgba(196,148,30,.05)';
+}
+
+function setMode(m) {
+  var ai = document.getElementById('mode-ai');
+  var hu = document.getElementById('mode-human');
+  if (m === 'ai') {
+    ai.style.background = 'rgba(196,148,30,.15)'; ai.style.borderColor = 'rgba(196,148,30,.22)'; ai.style.color = '#ddb84e';
+    hu.style.background = 'var(--b2)'; hu.style.borderColor = 'var(--bdr)'; hu.style.color = 'var(--muted)';
+  } else {
+    hu.style.background = 'rgba(196,148,30,.15)'; hu.style.borderColor = 'rgba(196,148,30,.22)'; hu.style.color = '#ddb84e';
+    ai.style.background = 'var(--b2)'; ai.style.borderColor = 'var(--bdr)'; ai.style.color = 'var(--muted)';
+    nav('s-consult');
+  }
+}
+
+function sendChat(e) {
+  if (e.key !== 'Enter') return;
+  var inp = document.getElementById('chat-input');
+  var txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = '';
+  var area = document.getElementById('chat-area');
+  var userRow = document.createElement('div');
+  userRow.style.cssText = 'display:flex;gap:7px;flex-direction:row-reverse';
+  userRow.innerHTML = '<div style="width:25px;height:25px;border-radius:50%;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--sub);flex-shrink:0;align-self:flex-end">MV</div>'
+    + '<div style="max-width:78%"><div style="padding:10px 13px;border-radius:14px;border-bottom-right-radius:3px;background:rgba(196,148,30,.17);color:var(--gold3);font-size:13px;line-height:1.55">' + txt + '</div>'
+    + '<div style="font-size:9px;color:var(--muted);text-align:right;padding:0 3px;margin-top:2px">Nu</div></div>';
+  area.appendChild(userRow);
+  userRow.scrollIntoView({ behavior:'smooth' });
+  var typingRow = document.createElement('div');
+  typingRow.style.cssText = 'display:flex;gap:7px';
+  typingRow.innerHTML = '<div style="width:25px;height:25px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#7a4e08);display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:11px;color:var(--b0);flex-shrink:0;align-self:flex-end">W</div>'
+    + '<div><div style="padding:12px 13px;border-radius:14px;border-bottom-left-radius:3px;background:var(--b3)"><div class="typing"><span></span><span></span><span></span></div></div></div>';
+  area.appendChild(typingRow);
+  typingRow.scrollIntoView({ behavior:'smooth' });
+  setTimeout(function() {
+    typingRow.remove();
+    var resp = document.createElement('div');
+    resp.style.cssText = 'display:flex;gap:7px';
+    resp.innerHTML = '<div style="width:25px;height:25px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#7a4e08);display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:11px;color:var(--b0);flex-shrink:0;align-self:flex-end">W</div>'
+      + '<div style="max-width:80%;display:flex;flex-direction:column;gap:3px">'
+      + '<div style="padding:10px 13px;border-radius:14px;border-bottom-left-radius:3px;background:var(--b3);color:var(--text);font-size:12px;line-height:1.6">Ik zoek dit op in onze expert-gevalideerde kennisbank en kom zo bij u terug.</div>'
+      + '<div class="vbadge"><span>✓</span><span>Expert-gevalideerde kennisbank · 2026</span></div>'
+      + '<div style="font-size:9px;color:var(--muted);padding:0 3px">Nu</div></div>';
+    area.appendChild(resp);
+    resp.scrollIntoView({ behavior:'smooth' });
+  }, 1800);
+}
+
+function confirmBooking() {
+  document.getElementById('overlay-confirm').style.display = 'flex';
+}
+
+function closeOverlay() {
+  document.getElementById('overlay-confirm').style.display = 'none';
+  appState.stack = [];
+  var prev = document.getElementById(appState.screen);
+  if (prev) prev.classList.remove('on');
+  var home = document.getElementById('s-home');
+  home.classList.add('on');
+  appState.screen = 's-home';
+  renderHome();
+}
+
+// ─────────────────────────────────────────────
+//  ACCOUNT DOMAIN CHIP
+// ─────────────────────────────────────────────
+var origNav = nav;
+function nav(id) {
+  origNav(id);
+  var chip = document.getElementById('account-domain-chip');
+  if (chip) chip.innerHTML = domainChipHTML(appState.domain);
+  var chatChip = document.getElementById('chat-domain-chip');
+  if (chatChip) chatChip.innerHTML = domainChipHTML(appState.domain);
+}
+
+// re-assign properly to avoid recursion
+(function() {
+  var _nav = function(id) {
+    var prev = document.getElementById(appState.screen);
+    var next = document.getElementById(id);
+    if (!next || id === appState.screen) return;
+    if (prev) prev.classList.remove('on');
+    next.classList.add('on');
+    appState.stack.push(appState.screen);
+    appState.screen = id;
+    var bnavScreens = ['s-home','s-chat','s-kennisbank','s-experts','s-account'];
+    var bnavIdx = bnavScreens.indexOf(id);
+    document.querySelectorAll('.bnav').forEach(function(bnav) {
+      bnav.querySelectorAll('.bni').forEach(function(item, i) {
+        if (bnavIdx >= 0) item.classList.toggle('on', i === bnavIdx);
+      });
+    });
+    // update chips on all screens
+    ['account-domain-chip','chat-domain-chip'].forEach(function(cid) {
+      var c = document.getElementById(cid); if (c) c.innerHTML = domainChipHTML(appState.domain);
+    });
+    if (id === 's-home') renderHome();
+    if (id === 's-experts') renderExperts();
+    if (id === 's-packages') renderPackages();
+    if (id === 's-consult') renderConsultExpert();
+    if (id === 's-kennisbank') renderKennisbank('alle', '');
+  };
+  nav = _nav;
+  window.nav = _nav;
+})();
+
+// ─────────────────────────────────────────────
+//  KENNISBANK DATA
+// ─────────────────────────────────────────────
+var kbActiveFilter = 'alle';
+var kbActiveSearch = '';
+
+var kbArticles = [
+  {
+    id:'kb1', cat:'fiscaal', icon:'💶',
+    title:'Erfbelasting 2026: alle vrijstellingen op een rij',
+    intro:'Wat betaalt u aan erfbelasting in 2026? Een volledig overzicht van vrijstellingen, tarieven en de meest gebruikte optimalisatiestrategieën.',
+    expert:'Mr. A. Lammers', cred:'Notaris Civiel Recht', date:'15 mrt 2026', read:'6 min',
+    tags:['Erfbelasting','Successiewet','Vrijstellingen'],
+    body:[
+      { type:'intro', text:'Erfbelasting (vroeger: successierecht) betaalt u over de waarde van wat u erft, minus de vrijstelling die voor u geldt. De tarieven en vrijstellingen worden jaarlijks geïndexeerd door de Belastingdienst.' },
+      { type:'h2', text:'Vrijstellingen in 2026' },
+      { type:'text', text:'De hoogte van de vrijstelling hangt af van uw relatie tot de overledene:' },
+      { type:'list', items:['Partner: €800.671 (ongehuwd samenwonend ≥5 jaar: zelfde)', 'Kind of pleegkind: €26.230', 'Kleinkind: €22.121', 'Overige erfgenamen: €2.658'] },
+      { type:'h2', text:'Schenkingsvrijstellingen (ouder → kind, 2026)' },
+      { type:'list', items:['Jaarlijks: €6.908 belastingvrij', 'Eenmalig verhoogd (18–40 jaar): €33.129', 'Jubelton (eigen woning): AFGESCHAFT'] },
+      { type:'callout', text:'Let op: de eenmalig verhoogde vrijstelling van €33.129 vervalt als uw kind ouder is dan 40 jaar of als de vrijstelling al eerder is benut.' },
+      { type:'h2', text:'Tarieven erfbelasting 2026' },
+      { type:'text', text:'Over het bedrag boven de vrijstelling betaalt u belasting. Voor kinderen: 10% over de eerste €154.197, daarboven 20%. Voor verdere familie of derden: 30% en 40%.' },
+      { type:'cta', text:'Wilt u weten hoe u de erfbelasting in uw situatie zo laag mogelijk houdt?', btn:'Gratis intake erfbelasting' }
+    ]
+  },
+  {
+    id:'kb2', cat:'juridisch', icon:'⚖️',
+    title:'Non-concurrentiebeding: wat mag wel en niet?',
+    intro:'Een non-concurrentiebeding beschermt de werkgever, maar kent strikte wettelijke grenzen. Wanneer is het geldig en wanneer kunt u het aanvechten?',
+    expert:'Mr. M. Hartman', cred:'Advocaat Arbeidsrecht', date:'10 mrt 2026', read:'5 min',
+    tags:['Arbeidsrecht','Non-concurrentie','Ontslag'],
+    body:[
+      { type:'intro', text:'Een non-concurrentiebeding verbiedt u na uw dienstverband om bij een concurrent te werken of een concurrerend bedrijf te starten. Maar de wet stelt strenge eisen aan de geldigheid ervan.' },
+      { type:'h2', text:'Wettelijke vereisten geldigheid' },
+      { type:'list', items:['Schriftelijk overeengekomen (mondeling is nietig)', 'Uitsluitend bij arbeidsovereenkomst voor onbepaalde tijd', 'Bij tijdelijk contract: alleen met zwaarwichtige bedrijfsbelangen (schriftelijk gemotiveerd)', 'Geen beding toegestaan bij functies jonger dan 18 jaar'] },
+      { type:'h2', text:'Geografische en tijdsbeperking' },
+      { type:'text', text:'Een beding dat onbeperkt in tijd en geografisch bereik is, is in principe vernietigbaar. De rechter toetst of de beperking proportioneel is. Een beding van 1 jaar binnen de Randstad is in de regel toelaatbaar; een beding van 3 jaar landelijk voor een medewerker in een niet-sleutelpositie waarschijnlijk niet.' },
+      { type:'callout', text:'Tip: werknemers kunnen de rechter vragen het beding te vernietigen of te matigen, ook als het op papier geldig lijkt.' },
+      { type:'cta', text:'Heeft u een non-concurrentiebeding dat u wilt laten beoordelen?', btn:'Arbeidscontract beoordeling €150' }
+    ]
+  },
+  {
+    id:'kb3', cat:'fiscaal', icon:'💶',
+    title:'BTW bij diensten naar het buitenland (B2B en B2C)',
+    intro:'Welk BTW-tarief geldt er als u diensten levert buiten Nederland? De regels verschillen sterk voor zakelijke en particuliere afnemers.',
+    expert:'Drs. S. van Dijk', cred:'Belastingadviseur RB', date:'8 mrt 2026', read:'4 min',
+    tags:['BTW','Internationaal','ZZP'],
+    body:[
+      { type:'intro', text:'Het BTW-stelsel voor grensoverschrijdende dienstverlening is complex. De hoofdregel hangt af van wie uw afnemer is: een ondernemer (B2B) of een particulier (B2C).' },
+      { type:'h2', text:'B2B — diensten aan buitenlandse ondernemers' },
+      { type:'list', items:['Binnen EU: heffing verlegd naar afnemer (0% op uw factuur, afnemer geeft aan in eigen land)', 'Buiten EU: 0% BTW, geen verlegging — gewoon nultarief', 'Vereiste: geldig BTW-nummer van afnemer (verifieer via VIES)'] },
+      { type:'h2', text:'B2C — diensten aan particulieren' },
+      { type:'list', items:['Particulieren in Nederland: 21% Nederlandse BTW', 'Particulieren binnen EU: 21% NL-BTW tót de drempel van €10.000 omzet', 'Boven €10.000 EU-omzet: BTW-tarief van het land van de klant (aangifte via OSS-systeem)'] },
+      { type:'callout', text:'Het OSS-systeem (One Stop Shop) kunt u activeren via de Belastingdienst. Daarmee hoeft u zich niet in elk EU-land apart te registreren.' },
+      { type:'cta', text:'Vragen over uw specifieke BTW-situatie?', btn:'Fiscaal advies vragen' }
+    ]
+  },
+  {
+    id:'kb4', cat:'strategisch', icon:'🎯',
+    title:'Eenmanszaak of BV: wanneer is de overstap slim?',
+    intro:'Veel ondernemers twijfelen over de overstap naar een BV. Het financiële omslagpunt, de stappen en de valkuilen uitgelegd.',
+    expert:'Drs. R. Koopman', cred:'Register Accountant RA', date:'5 mrt 2026', read:'7 min',
+    tags:['BV oprichten','Belasting','Bedrijfsstructuur'],
+    body:[
+      { type:'intro', text:'Een BV oprichten is niet altijd fiscaal voordelig. Het omslagpunt hangt af van uw winst, uw persoonlijke situatie en hoeveel u uit de onderneming wilt halen.' },
+      { type:'h2', text:'Het financiële omslagpunt' },
+      { type:'text', text:'Als vuistregel geldt: bij een structurele winst van €100.000 of meer per jaar wordt een BV fiscaal aantrekkelijk. U betaalt dan vennootschapsbelasting (19% over de eerste €200.000) in plaats van het IB-toptarief van 49,5%.' },
+      { type:'h2', text:'Voordelen BV' },
+      { type:'list', items:['Lagere belastingdruk bij hogere winsten', 'Beperkte aansprakelijkheid (privévermogen beschermd)', 'Makkelijker investeerders aantrekken', 'Pensioen in eigen beheer via holdingstructuur mogelijk'] },
+      { type:'h2', text:'Nadelen en kosten' },
+      { type:'list', items:['Oprichtingskosten notaris: ca. €700–1.200', 'Verplicht salaris DGA (minimum gebruikelijk loon: €56.000 in 2026)', 'Meer administratie en hogere accountantskosten', 'Winst uitkeren = nog eens 24,5% dividendbelasting'] },
+      { type:'callout', text:'Let op: de verplichte DGA-salarisnorm van €56.000 is een struikelblok voor starters. Overleg altijd met een accountant of de overstap per saldo voordelig is.' },
+      { type:'cta', text:'Wilt u uw specifieke situatie laten doorrekenen?', btn:'Consult boeken bij Drs. Koopman' }
+    ]
+  },
+  {
+    id:'kb5', cat:'personeel', icon:'👥',
+    title:'Ontslag op staande voet: wanneer is het rechtsgeldig?',
+    intro:'Ontslag op staande voet is het zwaarste middel in het arbeidsrecht. Wanneer mag het, wat zijn de gevolgen en hoe verloopt de procedure?',
+    expert:'Mr. M. Hartman', cred:'Advocaat Arbeidsrecht', date:'1 mrt 2026', read:'5 min',
+    tags:['Ontslag','Arbeidsrecht','Werkgever'],
+    body:[
+      { type:'intro', text:'Ontslag op staande voet (art. 7:677 BW) beëindigt de arbeidsovereenkomst per direct, zonder opzegtermijn. De lat ligt hoog: er moet sprake zijn van een dringende reden.' },
+      { type:'h2', text:'Wat is een dringende reden?' },
+      { type:'list', items:['Diefstal of verduistering', 'Ernstige mishandeling of bedreiging', 'Werkweigering bij herhaalde waarschuwingen', 'Fraude of valsheid in geschrifte', 'Onder invloed van alcohol of drugs op het werk (na waarschuwing)'] },
+      { type:'h2', text:'Wettelijke vereisten' },
+      { type:'list', items:['Onverwijld: ontslag moet direct na ontdekking worden gegeven', 'Mededeling van de reden: de werknemer moet direct weten waarom', 'Proportionaliteit: de reden moet zwaar genoeg zijn'] },
+      { type:'callout', text:'Ontslag op staande voet dat niet aan alle eisen voldoet, is vernietigbaar. De werknemer kan dan loondoorbetaling en herstel van de arbeidsovereenkomst eisen.' },
+      { type:'cta', text:'Staat u voor een ontslagsituatie of bent u ontslagen?', btn:'Direct juridisch advies' }
+    ]
+  },
+  {
+    id:'kb6', cat:'wonen', icon:'🏠',
+    title:'Huurder en gebreken: wat zijn uw rechten?',
+    intro:'Uw verhuurder is verplicht de woning in goede staat te houden. Maar wat kunt u doen als hij dat niet doet?',
+    expert:'Mr. A. Lammers', cred:'Notaris Civiel Recht', date:'26 feb 2026', read:'4 min',
+    tags:['Huurrecht','Gebrek','Huurverlaging'],
+    body:[
+      { type:'intro', text:'Een verhuurder heeft op grond van art. 7:204 BW een herstelplicht bij gebreken aan de woning. Als huurder heeft u verschillende rechtsmiddelen als de verhuurder tekortschiet.' },
+      { type:'h2', text:'Wat is een gebrek?' },
+      { type:'text', text:'Een gebrek is elke staat of eigenschap van de woning die het huurgenot vermindert. Denk aan: lekkage, schimmel, defecte CV-installatie, ongedierte of geluidsoverlast door gebrekkige isolatie.' },
+      { type:'h2', text:'Uw opties als huurder' },
+      { type:'list', items:['Schriftelijk verzoek tot herstel (bewaar altijd bewijs)', 'Huurverlaging aanvragen via de Huurcommissie', 'Zelf laten herstellen en kosten verrekenen (na ingebrekestelling)', 'Rechter vragen om nakoming of huurontbinding'] },
+      { type:'callout', text:'Stuur uw klacht altijd per e-mail of aangetekende brief. Mondeling klagen biedt geen rechtspositie als het later escaleert.' },
+      { type:'cta', text:'Heeft u een conflict met uw verhuurder?', btn:'Huurrecht advies vragen' }
+    ]
+  },
+  {
+    id:'kb7', cat:'financieel', icon:'📈',
+    title:'WBSO-subsidie aanvragen: zo werkt het',
+    intro:'De WBSO verlaagt de loonkosten voor R&D-activiteiten. Wie komt er in aanmerking en hoe vraagt u de subsidie aan?',
+    expert:'B. Nkosi MBA', cred:'Bedrijfscoach & Ondernemer', date:'20 feb 2026', read:'5 min',
+    tags:['WBSO','Subsidie','R&D','Startups'],
+    body:[
+      { type:'intro', text:'De Wet Bevordering Speur- en Ontwikkelingswerk (WBSO) is een fiscale tegemoetkoming voor ondernemers die software, producten of processen zelf ontwikkelen. In 2026 bedraagt het voordeel 32% over de eerste €350.000 aan S&O-loon.' },
+      { type:'h2', text:'Wie komt in aanmerking?' },
+      { type:'list', items:['Bedrijven én zzp\'ers met speur- en ontwikkelingswerk', 'Activiteiten moeten technisch nieuw zijn (voor uw bedrijf)', 'Eigen ontwikkeling — uitbesteed werk telt niet mee', 'Minimaal 500 uur S&O per jaar'] },
+      { type:'h2', text:'Hoe aanvragen?' },
+      { type:'list', items:['Aanvraag via RVO.nl (uiterlijk 1 dag vóór start project)', 'Beschrijf het technische probleem en de innovatie', 'Bijhouden van een S&O-urenadministratie verplicht', 'Achteraf mededelen via Mijn RVO'] },
+      { type:'callout', text:'Tip: zzp\'ers kunnen ook WBSO aanvragen op basis van een forfaitair bedrag, zonder urenregistratie. Dit is aanzienlijk eenvoudiger.' },
+      { type:'cta', text:'Hulp nodig bij uw WBSO-aanvraag?', btn:'Financieel advies boeken' }
+    ]
+  },
+  {
+    id:'kb8', cat:'juridisch', icon:'⚖️',
+    title:'AVG in de praktijk: wat moet u als MKB\'er regelen?',
+    intro:'Bijna elk bedrijf verwerkt persoonsgegevens. De AVG stelt concrete verplichtingen — maar wat heeft u nu echt minimaal nodig?',
+    expert:'Drs. S. van Dijk', cred:'Belastingadviseur RB', date:'14 feb 2026', read:'6 min',
+    tags:['AVG','Privacy','MKB','Compliance'],
+    body:[
+      { type:'intro', text:'De Algemene Verordening Gegevensbescherming (AVG) geldt voor elk bedrijf dat persoonsgegevens verwerkt. Dat is bijna iedereen met een klantenbestand, HR-systeem of nieuwsbrief.' },
+      { type:'h2', text:'De verplichte basis' },
+      { type:'list', items:['Verwerkingsregister: bijhouden welke gegevens u verwerkt, waarom en hoe lang', 'Privacyverklaring op uw website (ook verplicht voor zzp\'ers)', 'Verwerkersovereenkomst met leveranciers die namens u gegevens verwerken (bijv. boekhoudpakket)', 'Procedure voor datalekken: melding binnen 72 uur bij AP indien van toepassing'] },
+      { type:'h2', text:'Wanneer is een DPIA verplicht?' },
+      { type:'text', text:'Een Data Protection Impact Assessment is verplicht bij grootschalige verwerking van gevoelige gegevens (gezondheid, religie, biometrie), profiling of systematische monitoring. Voor de meeste MKB\'ers geldt dit niet.' },
+      { type:'callout', text:'Boetes: de AP kan tot €20 miljoen of 4% van de wereldwijde jaaromzet opleggen. In de praktijk richt de AP zich bij MKB eerst op herstel, maar herhaling leidt tot boetes.' },
+      { type:'cta', text:'Wilt u weten of uw bedrijf AVG-compliant is?', btn:'AVG compliance audit €350' }
+    ]
+  }
+];
+
+// ─────────────────────────────────────────────
+//  KENNISBANK RENDER
+// ─────────────────────────────────────────────
+function renderKennisbank(cat, query) {
+  kbActiveFilter = cat;
+  kbActiveSearch = query;
+  var list = document.getElementById('kb-list');
+  if (!list) return;
+
+  // filter by domain if set
+  var domainCat = appState.domain;
+  var items = kbArticles.filter(function(a) {
+    var matchCat = (cat === 'alle') || a.cat === cat;
+    var matchSearch = !query || a.title.toLowerCase().indexOf(query.toLowerCase()) >= 0
+      || a.intro.toLowerCase().indexOf(query.toLowerCase()) >= 0
+      || a.tags.join(' ').toLowerCase().indexOf(query.toLowerCase()) >= 0;
+    return matchCat && matchSearch;
+  });
+
+  if (!items.length) {
+    list.innerHTML = '<div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:13px">Geen artikelen gevonden</div>';
+    return;
+  }
+
+  // featured article (first)
+  var featured = items[0];
+  var rest = items.slice(1);
+
+  var catColors = {
+    juridisch: {c:'#8ab0e8', bg:'rgba(90,130,200,.1)', border:'rgba(90,130,200,.22)'},
+    fiscaal:   {c:'#ddb84e', bg:'rgba(196,148,30,.1)', border:'rgba(196,148,30,.22)'},
+    financieel:{c:'#c88ae8', bg:'rgba(180,100,220,.1)', border:'rgba(180,100,220,.22)'},
+    strategisch:{c:'#3dba9a', bg:'rgba(61,186,154,.1)', border:'rgba(61,186,154,.22)'},
+    personeel: {c:'#e8a070', bg:'rgba(220,120,80,.1)', border:'rgba(220,120,80,.22)'},
+    wonen:     {c:'#70d4b8', bg:'rgba(80,180,160,.1)', border:'rgba(80,180,160,.22)'}
+  };
+
+  function catBadge(c) {
+    var col = catColors[c] || {c:'var(--muted)',bg:'var(--b3)',border:'var(--bdr)'};
+    var labels = {juridisch:'Juridisch',fiscaal:'Fiscaal',financieel:'Financieel',strategisch:'Strategisch',personeel:'Personeel',wonen:'Wonen'};
+    return '<span style="display:inline-flex;align-items:center;font-size:9px;padding:2px 8px;border-radius:20px;background:'+col.bg+';border:1px solid '+col.border+';color:'+col.c+';font-weight:500">'+labels[c]+'</span>';
+  }
+
+  function articleCard(a, big) {
+    var col = catColors[a.cat] || {c:'var(--muted)',bg:'var(--b3)',border:'var(--bdr)'};
+    if (big) {
+      return '<div onclick="openArticle(\''+a.id+'\')" style="margin:0 20px 14px;background:linear-gradient(135deg,var(--b2),var(--b3));border:1px solid var(--bdr2);border-radius:16px;padding:18px;cursor:pointer;-webkit-tap-highlight-color:transparent">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'
+        + '<div style="display:flex;align-items:center;gap:7px">'
+        + '<div style="width:34px;height:34px;border-radius:9px;background:'+col.bg+';display:flex;align-items:center;justify-content:center;font-size:16px">'+a.icon+'</div>'
+        + catBadge(a.cat) + '</div>'
+        + '<span style="font-size:10px;color:var(--muted)">'+a.read+'</span></div>'
+        + '<div style="font-family:\'Playfair Display\',serif;font-size:16px;font-weight:400;color:var(--text);line-height:1.3;margin-bottom:7px">'+a.title+'</div>'
+        + '<div style="font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:12px">'+a.intro+'</div>'
+        + '<div style="display:flex;align-items:center;justify-content:space-between">'
+        + '<div style="display:flex;align-items:center;gap:7px">'
+        + '<div style="width:22px;height:22px;border-radius:50%;background:var(--b0);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--gold)">'+a.expert.split(' ').pop().charAt(0)+a.expert.charAt(0)+'</div>'
+        + '<div style="font-size:10px;color:var(--sub)">'+a.expert+'</div></div>'
+        + '<div style="display:flex;align-items:center;gap:5px;background:rgba(61,186,154,.07);border:1px solid rgba(61,186,154,.18);border-radius:6px;padding:3px 8px">'
+        + '<span style="font-size:9px;color:var(--teal)">✓ Gevalideerd</span></div>'
+        + '</div></div>';
+    } else {
+      return '<div onclick="openArticle(\''+a.id+'\')" style="display:flex;gap:12px;padding:14px 20px;border-bottom:1px solid var(--bdr);cursor:pointer;-webkit-tap-highlight-color:transparent">'
+        + '<div style="width:44px;height:44px;border-radius:11px;background:'+col.bg+';display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">'+a.icon+'</div>'
+        + '<div style="flex:1">'
+        + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">'+catBadge(a.cat)+'<span style="font-size:9px;color:var(--muted)">'+a.read+'</span></div>'
+        + '<div style="font-size:13px;font-weight:500;color:var(--text);line-height:1.35;margin-bottom:4px">'+a.title+'</div>'
+        + '<div style="display:flex;align-items:center;gap:6px">'
+        + '<span style="font-size:9px;color:var(--teal)">✓</span>'
+        + '<span style="font-size:10px;color:var(--muted)">'+a.expert+'</span>'
+        + '<span style="font-size:9px;color:var(--dim)">·</span>'
+        + '<span style="font-size:9px;color:var(--muted)">'+a.date+'</span>'
+        + '</div></div>'
+        + '<span style="color:var(--muted);font-size:13px;align-self:center;flex-shrink:0">›</span></div>';
+    }
+  }
+
+  var html = '';
+  // featured
+  html += '<div style="padding:4px 0 2px"><div style="padding:0 20px;margin-bottom:8px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted)">Uitgelicht</div></div>';
+  html += articleCard(featured, true) + '</div>';
+
+  if (rest.length) {
+    html += '<div style="padding:0 20px;margin-bottom:8px;margin-top:6px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted)">Alle artikelen</div></div>';
+    html += '<div style="background:var(--b2);border:1px solid var(--bdr);border-radius:14px;margin:0 20px;overflow:hidden">';
+    rest.forEach(function(a, i) {
+      var last = (i === rest.length - 1) ? 'border-bottom:none' : '';
+      html += '<div onclick="openArticle(\''+a.id+'\')" style="display:flex;gap:12px;padding:13px 15px;border-bottom:1px solid var(--bdr);'+last+';cursor:pointer;-webkit-tap-highlight-color:transparent">'
+        + '<div style="width:40px;height:40px;border-radius:10px;background:'+catColors[a.cat].bg+';display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">'+a.icon+'</div>'
+        + '<div style="flex:1">'
+        + '<div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">'+catBadge(a.cat)+'<span style="font-size:9px;color:var(--muted)">'+a.read+'</span></div>'
+        + '<div style="font-size:12px;font-weight:500;color:var(--text);line-height:1.35;margin-bottom:3px">'+a.title+'</div>'
+        + '<div style="font-size:9px;color:var(--muted)">'+a.expert+' · '+a.date+'</div>'
+        + '</div><span style="color:var(--muted);font-size:13px;align-self:center;flex-shrink:0">›</span></div>';
+    });
+    html += '</div>';
+  }
+  html += '<div style="height:24px"></div>';
+  list.innerHTML = html;
+}
+
+function filterKb(el, cat) {
+  document.querySelectorAll('#kb-cats .hchip').forEach(function(c) { c.classList.remove('on'); });
+  el.classList.add('on');
+  renderKennisbank(cat, kbActiveSearch);
+}
+
+function searchKb(q) {
+  renderKennisbank(kbActiveFilter, q);
+}
+
+// ─────────────────────────────────────────────
+//  ARTICLE DETAIL RENDER
+// ─────────────────────────────────────────────
+function openArticle(id) {
+  var article = null;
+  for (var i = 0; i < kbArticles.length; i++) {
+    if (kbArticles[i].id === id) { article = kbArticles[i]; break; }
+  }
+  if (!article) return;
+
+  var catColors = {
+    juridisch: {c:'#8ab0e8', bg:'rgba(90,130,200,.1)', border:'rgba(90,130,200,.22)'},
+    fiscaal:   {c:'#ddb84e', bg:'rgba(196,148,30,.1)', border:'rgba(196,148,30,.22)'},
+    financieel:{c:'#c88ae8', bg:'rgba(180,100,220,.1)', border:'rgba(180,100,220,.22)'},
+    strategisch:{c:'#3dba9a', bg:'rgba(61,186,154,.1)', border:'rgba(61,186,154,.22)'},
+    personeel: {c:'#e8a070', bg:'rgba(220,120,80,.1)', border:'rgba(220,100,80,.22)'},
+    wonen:     {c:'#70d4b8', bg:'rgba(80,180,160,.1)', border:'rgba(80,180,160,.22)'}
+  };
+  var col = catColors[article.cat] || {c:'var(--muted)',bg:'var(--b3)',border:'var(--bdr)'};
+  var labels = {juridisch:'Juridisch',fiscaal:'Fiscaal',financieel:'Financieel',strategisch:'Strategisch',personeel:'Personeel',wonen:'Wonen'};
+
+  var html = '<div style="padding:0 20px 28px">';
+
+  // meta header
+  html += '<div style="display:flex;align-items:center;gap:7px;margin-bottom:14px">'
+    + '<span style="display:inline-flex;font-size:9px;padding:2px 8px;border-radius:20px;background:'+col.bg+';border:1px solid '+col.border+';color:'+col.c+';font-weight:500">'+labels[article.cat]+'</span>'
+    + '<span style="font-size:9px;color:var(--muted)">'+article.read+' leestijd</span>'
+    + '<span style="font-size:9px;color:var(--muted)">· '+article.date+'</span>'
+    + '</div>';
+
+  // title
+  html += '<div style="font-family:\'Playfair Display\',serif;font-size:22px;font-weight:400;color:var(--text);line-height:1.2;margin-bottom:16px">'+article.title+'</div>';
+
+  // expert byline
+  html += '<div style="display:flex;align-items:center;gap:10px;background:var(--b2);border:1px solid rgba(61,186,154,.18);border-radius:11px;padding:10px 13px;margin-bottom:20px">'
+    + '<div style="width:34px;height:34px;border-radius:50%;background:var(--b3);border:1px solid var(--bdr2);display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:13px;color:var(--gold);flex-shrink:0">'+article.expert.split(' ').slice(-2,-1)[0].charAt(0)+article.expert.charAt(0)+'</div>'
+    + '<div><div style="font-size:12px;font-weight:500;color:var(--text)">'+article.expert+'</div>'
+    + '<div style="font-size:10px;color:var(--gold2)">'+article.cred+'</div></div>'
+    + '<div style="margin-left:auto;display:flex;align-items:center;gap:4px;background:rgba(61,186,154,.07);border:1px solid rgba(61,186,154,.18);border-radius:6px;padding:3px 8px">'
+    + '<span style="font-size:9px;color:var(--teal)">✓ Gevalideerd · '+article.date+'</span></div>'
+    + '</div>';
+
+  // body blocks
+  article.body.forEach(function(block) {
+    if (block.type === 'intro') {
+      html += '<div style="font-size:14px;color:var(--sub);line-height:1.75;margin-bottom:16px;border-left:2px solid var(--bdr2);padding-left:12px">'+block.text+'</div>';
+    } else if (block.type === 'h2') {
+      html += '<div style="font-family:\'Playfair Display\',serif;font-size:17px;font-weight:400;color:var(--text);margin:18px 0 8px">'+block.text+'</div>';
+    } else if (block.type === 'text') {
+      html += '<div style="font-size:13px;color:var(--sub);line-height:1.7;margin-bottom:12px">'+block.text+'</div>';
+    } else if (block.type === 'list') {
+      html += '<ul style="list-style:none;display:flex;flex-direction:column;gap:7px;margin-bottom:14px">';
+      block.items.forEach(function(item) {
+        html += '<li style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--sub);line-height:1.55">'
+          + '<span style="color:var(--teal);flex-shrink:0;margin-top:2px">✓</span>'+item+'</li>';
+      });
+      html += '</ul>';
+    } else if (block.type === 'callout') {
+      html += '<div style="background:rgba(196,148,30,.07);border:1px solid var(--bdr2);border-radius:10px;padding:12px 14px;margin:14px 0;display:flex;gap:9px">'
+        + '<span style="font-size:14px;flex-shrink:0">💡</span>'
+        + '<div style="font-size:12px;color:var(--gold3);line-height:1.6">'+block.text+'</div>'
+        + '</div>';
+    } else if (block.type === 'cta') {
+      html += '<div style="background:linear-gradient(135deg,var(--b2),var(--b3));border:1px solid var(--bdr2);border-radius:12px;padding:14px;margin-top:20px;text-align:center">'
+        + '<div style="font-size:12px;color:var(--sub);margin-bottom:10px">'+block.text+'</div>'
+        + '<button onclick="nav(\'s-consult\')" style="background:var(--gold);color:var(--b0);border:none;border-radius:9px;padding:10px 18px;font-family:\'DM Sans\',sans-serif;font-size:12px;font-weight:500;cursor:pointer;width:100%">'+block.btn+' →</button>'
+        + '</div>';
+    }
+  });
+
+  // tags
+  html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:20px">';
+  article.tags.forEach(function(tag) {
+    html += '<span style="font-size:9px;color:var(--muted);border:1px solid var(--bdr);border-radius:20px;padding:2px 8px"># '+tag+'</span>';
+  });
+  html += '</div>';
+  html += '</div>';
+
+  var body = document.getElementById('article-body');
+  if (body) body.innerHTML = html;
+
+  nav('s-article');
+}
+
+
+</script>
+</body>
+</html>
