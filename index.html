@@ -3977,13 +3977,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 
     <!-- experts strip -->
     <div style="padding:0 20px;margin-bottom:8px"><div class="db-seclabel" data-i18n="now_available">Nu beschikbaar</div></div>
-    <div class="db-hscr" style="margin-bottom:16px">
-      <div class="db-expert-chip" onclick="dbNav('experts')"><div class="db-exp-av ep1" style="background:linear-gradient(135deg,#1a1412,#2a1e0a)">RK<div class="db-exp-dot"></div></div><div class="db-exp-name">Koopman RA</div></div>
-      <div class="db-expert-chip" onclick="dbNav('experts')"><div class="db-exp-av ep2" style="background:linear-gradient(135deg,#101520,#1a2030)">MH<div class="db-exp-dot"></div></div><div class="db-exp-name">Hartman Adv.</div></div>
-      <div class="db-expert-chip" onclick="dbNav('experts')"><div class="db-exp-av ep3" style="background:linear-gradient(135deg,#0f1a14,#1a2c1a)">SV<div class="db-exp-dot"></div></div><div class="db-exp-name">Van Dijk RB</div></div>
-      <div class="db-expert-chip" onclick="dbNav('experts')"><div class="db-exp-av ep4" style="background:linear-gradient(135deg,#1a1418,#2a1a22)">AL<div class="db-exp-dot"></div></div><div class="db-exp-name">Lammers Not.</div></div>
-      <div class="db-expert-chip" onclick="dbNav('experts')"><div class="db-exp-av ep5" style="background:linear-gradient(135deg,#1a1208,#2a2010)">BN<div class="db-exp-dot"></div></div><div class="db-exp-name">Nkosi MBA</div></div>
-    </div>
+    <div class="db-hscr" style="margin-bottom:16px" id="home-experts-strip"></div>
 
     <!-- recent -->
     <div style="padding:0 20px;margin-bottom:8px"><div class="db-seclabel" data-i18n="recent_questions">Recente vragen</div></div>
@@ -4582,6 +4576,17 @@ async function loadDbHome(){
   if(recent){
     if(!convs.length){recent.innerHTML='<div style="padding:18px;text-align:center;font-size:.76rem;color:var(--muted)">'+t('no_questions')+'</div>';}
     else{recent.innerHTML=convs.slice(0,4).map(function(c){var ic=icons[c.domein]||'💬';var dt=new Date(c.created_at).toLocaleDateString('nl-NL',{day:'numeric',month:'short'});return'<div class="db-row-tap" onclick="dbNav(\'chat\')" style="padding:11px 14px"><div class="db-ic-box" style="background:rgba(196,148,30,.1);width:28px;height:28px;font-size:12px">'+ic+'</div><div style="flex:1"><div style="font-size:.77rem;color:var(--text);line-height:1.4;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden">'+(c.vraag||'').substring(0,70)+'</div><div style="font-size:.65rem;color:var(--muted);margin-top:2px">✓ '+(c.expert||'Wijzer AI')+' · '+dt+'</div></div><span style="font-size:16px;color:var(--muted)">›</span></div>';}).join('');}
+  }
+  // render Nu beschikbaar strip filtered by domain
+  var strip=document.getElementById('home-experts-strip');
+  if(strip){
+    var expColors=['#c4941e','#8ab0d4','#6ab48a','#c48abd','#d4a848','#48b4b4'];
+    var expBgs=['linear-gradient(135deg,#1a1412,#2a1e0a)','linear-gradient(135deg,#101520,#1a2030)','linear-gradient(135deg,#0f1a14,#1a2c1a)','linear-gradient(135deg,#1a1418,#2a1a22)','linear-gradient(135deg,#1a1208,#2a2010)','linear-gradient(135deg,#10181a,#142828)'];
+    var visibleExperts=dbDomain?dbExpertData.filter(function(e){return e.domains.indexOf(dbDomain)>=0;}):dbExpertData;
+    strip.innerHTML=visibleExperts.map(function(e,i){
+      var shortName=e.name.split(' ').slice(-2).join(' ');
+      return '<div class="db-expert-chip" onclick="dbNav(\'experts\')"><div class="db-exp-av" style="background:'+e.bg+';color:'+e.color+'">'+e.initials+'<div class="db-exp-dot"></div></div><div class="db-exp-name">'+shortName+'</div></div>';
+    }).join('');
   }
   // also update domain chips
   updateDbDomainChips();
