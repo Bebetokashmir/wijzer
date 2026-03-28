@@ -1,0 +1,43 @@
+{
+  "name": "Wijzer — Uw persoonlijke adviseur",
+  "short_name": "Wijzer",
+  "description": "Expert-gevalideerd advies over recht, financiën, boekhouden en meer.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#09090d",
+  "theme_color": "#09090d",
+  "lang": "nl",
+  "categories": ["finance", "legal", "productivity"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Adviseur openen",
+      "short_name": "Adviseur",
+      "description": "Direct een vraag stellen",
+      "url": "/?screen=chat",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Kennisbank",
+      "short_name": "Kennisbank",
+      "description": "Expert-gevalideerde artikelen",
+      "url": "/?screen=kennisbank",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
