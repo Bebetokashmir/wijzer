@@ -3657,8 +3657,7 @@ body.in-dash>#home-content{display:none!important}
 /* Real header bars */
 .db-topbar-real{height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;background:var(--b1);border-bottom:1px solid var(--bdr);flex-shrink:0}
 
-/* ── BOTTOM NAV ── */
-.db-bnav{height:60px;background:var(--b1);border-top:1px solid var(--bdr);display:flex;align-items:flex-start;justify-content:space-around;padding-top:7px;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom,0)}
+/* ── BOTTOM NAV ── (flex item, defined again below) */
 .db-bni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:2px 14px;border-radius:10px;background:none;border:none;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
 .db-bni.on .db-bic{color:var(--gold)}
 .db-bni.on .db-blb{color:var(--gold2)}
@@ -3777,30 +3776,30 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 /* ── STATUS BAR — hidden ── */
 .db-sbar{display:none}
 
-/* ── BOTTOM NAV — fixed, always visible ── */
+/* ── BOTTOM NAV — flex item inside each screen ── */
 .db-bnav{
-  position:fixed;bottom:0;left:0;right:0;
   height:62px;background:var(--b1);border-top:1px solid var(--bdr);
   display:flex;align-items:center;justify-content:space-around;
-  padding-bottom:env(safe-area-inset-bottom,0);z-index:50;
+  flex-shrink:0;
+  padding-bottom:env(safe-area-inset-bottom,0px);
 }
-/* push scrollable content above the fixed nav */
-.db-scr{padding-bottom:74px}
-/* chat input stays above nav */
-#dbs-chat{padding-bottom:0}
+/* scrollable content fills remaining space */
+.db-scr{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+/* chat input as flex item */
 #dbs-chat .db-chat-inp-row{
-  position:fixed;bottom:calc(62px + env(safe-area-inset-bottom,0px));left:0;right:0;
+  flex-shrink:0;
   padding:8px 16px;
-  background:var(--b1);border-top:1px solid var(--bdr);z-index:40;
+  background:var(--b1);border-top:1px solid var(--bdr);
 }
-/* Messages scroll freely — padding-bottom = nav(62) + input bar(~58) + margin(8) */
+/* Messages fill chat area */
 #dbs-chat .db-chat-msgs{
   flex:1;
   overflow-y:auto;
   -webkit-overflow-scrolling:touch;
-  padding:16px 20px 136px;
+  padding:16px 20px;
   display:flex;
   flex-direction:column;
+  justify-content:flex-end;
   gap:14px;
 }
 
@@ -3823,13 +3822,12 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   .db-qa-grid{grid-template-columns:repeat(4,1fr)}
 }
 @media(min-width:900px){
-  /* Center the entire app as a 1040px column with top breathing room */
+  /* Center the entire app as a 1040px column */
   .db-screen{
-    top:24px;
     left:max(0px, calc(50% - 520px));
     right:max(0px, calc(50% - 520px));
-    border:1px solid var(--bdr);
-    border-radius:16px 16px 0 0;
+    border-left:1px solid var(--bdr);
+    border-right:1px solid var(--bdr);
   }
   .db-scr{padding-left:20px;padding-right:20px}
   .db-hscr{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px}
@@ -3838,19 +3836,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   .db-kb-grid-inner{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .db-kb-grid-inner .db-kb-card{margin-bottom:0}
   .db-topbar-real{padding-left:20px;padding-right:20px}
-  #dbs-chat .db-chat-inp-row{
-    left:max(0px, calc(50% - 520px));
-    right:max(0px, calc(50% - 520px));
-    padding-left:20px;
-    padding-right:20px;
-  }
-  #dbs-chat .db-chat-msgs{padding-left:20px;padding-right:20px;padding-top:24px}
-  .db-bnav{
-    left:max(0px, calc(50% - 520px));
-    right:max(0px, calc(50% - 520px));
-    border-radius:0 0 0 0;
-  }
-  #dbs-chat .db-chat-inp-row{bottom:62px}
+  #dbs-chat .db-chat-msgs{padding-left:20px;padding-right:20px}
 }
 </style>
 
@@ -4046,6 +4032,13 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     <input class="db-chat-input" type="text" id="db-chat-inp" onkeydown="if(event.key==='Enter')sendDbMsg()" data-i18n-ph="ask_question">
     <button type="button" class="db-chat-send" onclick="sendDbMsg()">↑</button>
   </div>
+  <div class="db-bnav">
+    <button type="button" class="db-bni" onclick="dbNav('home')"><i class="db-bic fa-solid fa-house"></i><span class="db-blb" data-i18n="nav_home">Home</span></button>
+    <button type="button" class="db-bni on" onclick="dbNav('chat')"><i class="db-bic fa-solid fa-comment"></i><span class="db-blb" data-i18n="nav_advisor">Adviseur</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('kennisbank')"><i class="db-bic fa-solid fa-book-open"></i><span class="db-blb" data-i18n="nav_kb">Kennisbank</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('experts')"><i class="db-bic fa-solid fa-users"></i><span class="db-blb" data-i18n="nav_experts">Experts</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('account')"><i class="db-bic fa-solid fa-circle-user"></i><span class="db-blb" data-i18n="nav_account">Account</span></button>
+  </div>
 </div>
 
 <!-- ══════════════════════════════
@@ -4059,7 +4052,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     </div>
     <div id="kb-domain-chip" onclick="dbNav('domain')" style="cursor:pointer" title="Wissel domein"></div>
   </div>
-  <div class="db-scr" style="padding:0 20px 20px" id="kb-list-wrap">
+  <div class="db-scr" style="padding:14px 20px 20px" id="kb-list-wrap">
     <input class="db-kb-search" type="text" id="db-kb-search" oninput="filterDbKb()" style="margin-bottom:12px" data-i18n-ph="kb_search">
     <div class="db-hchip-row" style="margin-bottom:14px">
       <button type="button" class="db-hchip on" onclick="filterDbKbCat(this,'alle')" data-i18n="all">Alle</button>
@@ -4072,6 +4065,13 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   <div class="db-scr" style="padding:0 20px 20px;display:none" id="kb-article-wrap">
     <button type="button" onclick="closeDbArt()" style="background:none;border:none;color:var(--gold2);font-size:.8rem;cursor:pointer;padding:0;margin-bottom:14px;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px">← <span data-i18n="back_kb">Terug naar kennisbank</span></button>
     <div id="db-kb-article-content"></div>
+  </div>
+  <div class="db-bnav">
+    <button type="button" class="db-bni" onclick="dbNav('home')"><i class="db-bic fa-solid fa-house"></i><span class="db-blb" data-i18n="nav_home">Home</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('chat')"><i class="db-bic fa-solid fa-comment"></i><span class="db-blb" data-i18n="nav_advisor">Adviseur</span></button>
+    <button type="button" class="db-bni on" onclick="dbNav('kennisbank')"><i class="db-bic fa-solid fa-book-open"></i><span class="db-blb" data-i18n="nav_kb">Kennisbank</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('experts')"><i class="db-bic fa-solid fa-users"></i><span class="db-blb" data-i18n="nav_experts">Experts</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('account')"><i class="db-bic fa-solid fa-circle-user"></i><span class="db-blb" data-i18n="nav_account">Account</span></button>
   </div>
 </div>
 
@@ -4093,6 +4093,13 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       <div style="font-size:.78rem;color:var(--sub);margin-bottom:10px" data-i18n="expert_join">Wilt u als expert bijdragen? <strong style="color:var(--text)">70%</strong> van elk consult.</div>
       <button type="button" class="db-obtn" onclick="dbNav('account')" data-i18n="expert_apply">Aanmelden als expert →</button>
     </div>
+  </div>
+  <div class="db-bnav">
+    <button type="button" class="db-bni" onclick="dbNav('home')"><i class="db-bic fa-solid fa-house"></i><span class="db-blb" data-i18n="nav_home">Home</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('chat')"><i class="db-bic fa-solid fa-comment"></i><span class="db-blb" data-i18n="nav_advisor">Adviseur</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('kennisbank')"><i class="db-bic fa-solid fa-book-open"></i><span class="db-blb" data-i18n="nav_kb">Kennisbank</span></button>
+    <button type="button" class="db-bni on" onclick="dbNav('experts')"><i class="db-bic fa-solid fa-users"></i><span class="db-blb" data-i18n="nav_experts">Experts</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('account')"><i class="db-bic fa-solid fa-circle-user"></i><span class="db-blb" data-i18n="nav_account">Account</span></button>
   </div>
 </div>
 
@@ -4514,11 +4521,7 @@ function dbNav(name){
   document.querySelectorAll('.db-screen').forEach(function(s){s.classList.remove('on');});
   var target=document.getElementById(dbScreenMap[name]||'dbs-home');
   if(target)target.classList.add('on');
-  // sync bottom nav active state
-  var bnMap={home:0,chat:1,kennisbank:2,experts:3,account:4};
-  document.querySelectorAll('#dbs-home .db-bnav .db-bni, #dbs-account .db-bnav .db-bni').forEach(function(b){b.classList.remove('on');});
-  if(name==='home'){document.querySelectorAll('#dbs-home .db-bnav .db-bni')[0]&&document.querySelectorAll('#dbs-home .db-bnav .db-bni')[0].classList.add('on');}
-  if(name==='account'){document.querySelectorAll('#dbs-account .db-bnav .db-bni')[4]&&document.querySelectorAll('#dbs-account .db-bnav .db-bni')[4].classList.add('on');}
+  // sync bottom nav active state (each screen has its own bnav with static on class)
   // scroll to top
   if(target){var scr=target.querySelector('.db-scr');if(scr)scr.scrollTop=0;}
   // refresh
