@@ -4520,10 +4520,16 @@ var domainChatChips={
 function renderChatChips(){
   var el=document.getElementById('chat-chips');if(!el)return;
   var chips=domainChatChips[dbDomain]||domainChatChips.juridisch;
-  el.innerHTML=chips.map(function(c){
-    return '<button type="button" class="db-chip" onclick="sendDbMsg(\''+c[1].replace(/'/g,"\\'")+'\'">'+c[0]+'</button>';
-  }).join('');
-  el.style.display='flex'; // make sure chips row is visible
+  el.innerHTML='';
+  chips.forEach(function(c){
+    var btn=document.createElement('button');
+    btn.type='button';
+    btn.className='db-chip';
+    btn.textContent=c[0];
+    btn.addEventListener('click',function(){sendDbMsg(c[1]);});
+    el.appendChild(btn);
+  });
+  el.style.display='flex';
 }
 
 function selectDomain(domain){
