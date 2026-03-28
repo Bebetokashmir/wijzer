@@ -3942,7 +3942,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     <!-- top bar -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 12px">
       <div>
-        <div id="home-domain-chip"></div>
+        <div id="home-domain-chip" onclick="dbNav('domain')" style="cursor:pointer" title="Wissel domein"></div>
         <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:400;color:var(--text);margin-top:5px"><span id="home-greeting">Goedemorgen</span>, <em id="home-firstname" style="color:var(--gold)">—</em></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
@@ -4019,7 +4019,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:8px">
-      <div id="chat-domain-chip"></div>
+      <div id="chat-domain-chip" onclick="dbNav('domain')" style="cursor:pointer" title="Wissel domein"></div>
       <!-- AI / Expert toggle -->
       <div id="chat-mode-toggle" style="display:flex;align-items:center;background:var(--b3);border:1px solid var(--bdr);border-radius:20px;padding:2px;gap:2px">
         <button type="button" id="chat-mode-ai" onclick="setChatMode('ai')" style="padding:4px 10px;border-radius:16px;border:none;font-family:'Inter',sans-serif;font-size:.65rem;cursor:pointer;transition:all .2s;background:var(--gold);color:var(--b0);font-weight:500">AI</button>
@@ -4060,7 +4060,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       <span style="font-size:18px;color:var(--muted)">‹</span>
       <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text)">Kennis<em style="font-style:italic;color:var(--gold)" data-i18n="nav_kb_em">bank</em></span>
     </div>
-    <div id="kb-domain-chip"></div>
+    <div id="kb-domain-chip" onclick="dbNav('domain')" style="cursor:pointer" title="Wissel domein"></div>
   </div>
   <div class="db-scr" style="padding:0 20px 20px" id="kb-list-wrap">
     <input class="db-kb-search" type="text" id="db-kb-search" oninput="filterDbKb()" style="margin-bottom:12px" data-i18n-ph="kb_search">
@@ -4087,7 +4087,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       <span style="font-size:18px;color:var(--muted)">‹</span>
       <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text)"><em style="font-style:italic;color:var(--gold)" data-i18n="our_em">Ons</em> <span data-i18n="expert_team">expertteam</span></span>
     </div>
-    <div id="exp-domain-chip"></div>
+    <div id="exp-domain-chip" onclick="dbNav('domain')" style="cursor:pointer" title="Wissel domein"></div>
   </div>
   <div class="db-scr" style="padding:0 20px 24px">
     <p style="font-size:.78rem;color:var(--muted);margin-bottom:16px" data-i18n="experts_sub">Echte professionals met naam en kwalificaties achter elk antwoord.</p>
@@ -4188,7 +4188,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     <!-- domain switch -->
     <div style="padding:0 20px;margin-bottom:8px"><div class="db-seclabel" data-i18n="current_domain">Huidig domein</div></div>
     <div style="margin:0 20px 14px;background:var(--b2);border:1px solid var(--bdr);border-radius:11px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between">
-      <div id="acc-domain-chip"></div>
+      <div id="acc-domain-chip" onclick="dbNav('domain')" style="cursor:pointer" title="Wissel domein"></div>
       <button type="button" onclick="dbNav('domain')" class="db-obtn" data-i18n="switch_domain">Wisselen</button>
     </div>
 
