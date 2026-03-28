@@ -3812,8 +3812,13 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   padding:16px 20px;
   display:flex;
   flex-direction:column;
-  justify-content:flex-end;
+  justify-content:flex-start;
   gap:14px;
+}
+/* Push messages to bottom when there are few of them */
+#dbs-chat .db-chat-msgs::before{
+  content:'';
+  flex:1;
 }
 
 /* ── RESPONSIVE — wider screens ── */
