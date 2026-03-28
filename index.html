@@ -114,16 +114,16 @@ function showLoggedInState() {
   var navR = document.querySelector('.nav-r');
   if (!navR) return;
   navR.innerHTML = langBtnHtml()
-    + '<button class="nav-in" onclick="goPage(\'dashboard\')">' + (typeof tSite === 'function' ? tSite('nav_login') || 'Mijn account' : 'Mijn account') + '</button>'
-    + '<button class="nav-cta" onclick="doSignOut()">' + (typeof tSite === 'function' && siteLang === 'en' ? 'Log out' : 'Uitloggen') + '</button>';
+    + '<button type="button" class="nav-in" onclick="goPage(\'dashboard\')">' + (typeof tSite === 'function' ? tSite('nav_login') || 'Mijn account' : 'Mijn account') + '</button>'
+    + '<button type="button" class="nav-cta" onclick="doSignOut()">' + (typeof tSite === 'function' && siteLang === 'en' ? 'Log out' : 'Uitloggen') + '</button>';
 }
 
 function showLoggedOutState() {
   var navR = document.querySelector('.nav-r');
   if (!navR) return;
   navR.innerHTML = langBtnHtml()
-    + '<button class="nav-in" id="nav-login-btn" onclick="openAuth(\'login\')">' + (typeof tSite === 'function' ? tSite('nav_login') : 'Inloggen') + '</button>'
-    + '<button class="nav-cta" id="nav-register-btn" onclick="openAuth(\'register\')">' + (typeof tSite === 'function' ? tSite('nav_register') : 'Gratis beginnen →') + '</button>';
+    + '<button type="button" class="nav-in" id="nav-login-btn" onclick="openAuth(\'login\')">' + (typeof tSite === 'function' ? tSite('nav_login') : 'Inloggen') + '</button>'
+    + '<button type="button" class="nav-cta" id="nav-register-btn" onclick="openAuth(\'register\')">' + (typeof tSite === 'function' ? tSite('nav_register') : 'Gratis beginnen →') + '</button>';
 }
 
 function updateNavForUser(profile) {
@@ -132,12 +132,12 @@ function updateNavForUser(profile) {
   var initials = ((profile.voornaam||'?').charAt(0) + (profile.achternaam||'?').charAt(0)).toUpperCase();
   navR.innerHTML = langBtnHtml()
     + '<div onclick="goPage(\'dashboard\')" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8a5f08);display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:.85rem;font-weight:500;color:var(--b0);cursor:pointer">' + initials + '</div>'
-    + '<button class="nav-cta" onclick="goPage(\'dashboard\')">' + (typeof tSite === 'function' && siteLang === 'en' ? 'Dashboard' : 'Dashboard') + '</button>';
+    + '<button type="button" class="nav-cta" onclick="goPage(\'dashboard\')">' + (typeof tSite === 'function' && siteLang === 'en' ? 'Dashboard' : 'Dashboard') + '</button>';
 }
 
 function langBtnHtml() {
   var label = (typeof siteLang !== 'undefined' && siteLang === 'en') ? '🌐 NL' : '🌐 EN';
-  return '<button onclick="toggleSiteLang()" id="site-lang-btn" style="font-size:.78rem;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--bdr);cursor:pointer;padding:7px 12px;border-radius:7px;font-family:\'Inter\',sans-serif;display:flex;align-items:center;gap:5px">' + label + '</button>';
+  return '<button type="button" onclick="toggleSiteLang()" id="site-lang-btn" style="font-size:.78rem;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--bdr);cursor:pointer;padding:7px 12px;border-radius:7px;font-family:\'Inter\',sans-serif;display:flex;align-items:center;gap:5px">' + label + '</button>';
 }
 
 async function doSignOut() {
@@ -445,9 +445,9 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
     <li><a href="#vertrouwelijkheid" data-i18n-nav="confidentiality">Vertrouwelijkheid</a></li>
   </ul>
   <div class="nav-r">
-    <button onclick="toggleSiteLang()" id="site-lang-btn" style="font-size:.78rem;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--bdr);cursor:pointer;padding:7px 12px;border-radius:7px;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;gap:5px" onmouseover="this.style.borderColor='var(--bdr2)'" onmouseout="this.style.borderColor='var(--bdr)'">🌐 EN</button>
-    <button class="nav-in" onclick="openAuth('login')" id="nav-login-btn">Inloggen</button>
-    <button class="nav-cta" onclick="openAuth('register')" id="nav-register-btn">Gratis beginnen →</button>
+    <button type="button" onclick="toggleSiteLang()" id="site-lang-btn" style="font-size:.78rem;color:var(--muted);background:rgba(255,255,255,.05);border:1px solid var(--bdr);cursor:pointer;padding:7px 12px;border-radius:7px;font-family:'Inter',sans-serif;transition:all .2s;display:flex;align-items:center;gap:5px" onmouseover="this.style.borderColor='var(--bdr2)'" onmouseout="this.style.borderColor='var(--bdr)'">🌐 EN</button>
+    <button type="button" class="nav-in" onclick="openAuth('login')" id="nav-login-btn">Inloggen</button>
+    <button type="button" class="nav-cta" onclick="openAuth('register')" id="nav-register-btn">Gratis beginnen →</button>
   </div>
 </nav>
 
@@ -458,8 +458,8 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
     <h1 data-i18n-html="hero_h1">Slimmer advies.<br><em>Zonder</em> het uurtarief.</h1>
     <p class="hero-sub" data-i18n="hero_sub">Wijzer geeft u direct toegang tot betrouwbaar, expert-gevalideerd advies over recht, financiën, boekhouden en meer — via AI of een echte specialist.</p>
     <div class="hero-acts">
-      <button class="btn btn-g" onclick="openAuth('register')" data-i18n="hero_cta_primary">Gratis beginnen →</button>
-      <button class="btn btn-o" onclick="openChat()" data-i18n="hero_cta_secondary">Bekijk een voorbeeld</button>
+      <button type="button" class="btn btn-g" onclick="openAuth('register')" data-i18n="hero_cta_primary">Gratis beginnen →</button>
+      <button type="button" class="btn btn-o" onclick="openChat()" data-i18n="hero_cta_secondary">Bekijk een voorbeeld</button>
     </div>
     <div class="hero-trust" style="margin-top:28px">
       <div class="ti"><div class="td"></div><span data-i18n="trust_1">Elk antwoord expert-gevalideerd</span></div>
@@ -923,7 +923,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li><span class="cx">✗</span>Contracttemplates</li>
         <li><span class="cx">✗</span>Menselijk contact</li>
       </ul>
-      <button class="pr-cta o">Gratis beginnen</button>
+      <button type="button" class="pr-cta o">Gratis beginnen</button>
     </div>
     <div class="pr-c">
       <div class="pr-tier">Persoonlijk</div>
@@ -937,7 +937,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li class="on"><span class="ck">✓</span>Wetgeving-alerts</li>
         <li><span class="cx">✗</span>Menselijk contact</li>
       </ul>
-      <button class="pr-cta o">Activeren</button>
+      <button type="button" class="pr-cta o">Activeren</button>
     </div>
     <div class="pr-c feat">
       <div class="pr-badge">Nieuw · Persoonlijk Pro</div>
@@ -951,7 +951,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li class="on"><span class="ck">✓</span>Chat, video of in persoon</li>
         <li class="on"><span class="ck">✓</span>Extra consulten: €55/uur</li>
       </ul>
-      <button class="pr-cta s">Nu starten</button>
+      <button type="button" class="pr-cta s">Nu starten</button>
       <div class="pr-note">Junior expert onder supervisie senior.</div>
     </div>
     <div class="pr-c">
@@ -965,7 +965,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li class="on"><span class="ck">✓</span>Contractgeneratie</li>
         <li class="on"><span class="ck">✓</span>Subsidie navigator</li>
       </ul>
-      <button class="pr-cta o">Activeren</button>
+      <button type="button" class="pr-cta o">Activeren</button>
       <div class="hf-pill">👤 Human-first optie</div>
       <div class="pr-note">Junior €55/uur · Senior €120/uur</div>
     </div>
@@ -980,7 +980,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li class="on"><span class="ck">✓</span>Dedicated expert</li>
         <li class="on"><span class="ck">✓</span>Prioriteitsescalatie</li>
       </ul>
-      <button class="pr-cta o">Aanvragen</button>
+      <button type="button" class="pr-cta o">Aanvragen</button>
       <div class="hf-pill">👤 Human-first standaard</div>
       <div class="pr-note">Senior €120/uur · 70% naar expert</div>
     </div>
@@ -1010,7 +1010,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li class="on"><span class="ck">✓</span>Begeleiding aangifte erfbelasting</li>
         <li class="on"><span class="ck">✓</span>Schriftelijk adviesrapport</li>
       </ul>
-      <button class="pkg-btn gold">Gratis intake aanvragen</button>
+      <button type="button" class="pkg-btn gold">Gratis intake aanvragen</button>
     </div>
     <div class="pkg-c">
       <div class="pkg-head">
@@ -1024,7 +1024,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li class="on"><span class="ck">✓</span>KvK-inschrijving begeleiding</li>
         <li class="on"><span class="ck">✓</span>Eerste belasting & BTW setup</li>
       </ul>
-      <button class="pkg-btn" onclick="document.getElementById('tarieven').scrollIntoView({behavior:'smooth'})">Pakket bekijken</button>
+      <button type="button" class="pkg-btn" onclick="document.getElementById('tarieven').scrollIntoView({behavior:'smooth'})">Pakket bekijken</button>
     </div>
     <div class="pkg-c">
       <div class="pkg-head">
@@ -1038,7 +1038,7 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
         <li class="on"><span class="ck">✓</span>Risicoscan datalekken</li>
         <li class="on"><span class="ck">✓</span>Actielijst naleving</li>
       </ul>
-      <button class="pkg-btn">Direct boeken</button>
+      <button type="button" class="pkg-btn">Direct boeken</button>
     </div>
   </div>
   <div style="text-align:center;margin-top:28px">
@@ -1051,8 +1051,8 @@ footer{padding:40px 52px;border-top:1px solid var(--bdr);display:flex;align-item
   <h2>Klaar om <em>slimmer</em> te werken?</h2>
   <p>Maak direct een account aan en stel uw eerste vraag gratis. Geen verplichtingen, geen creditcard — gewoon beginnen.</p>
   <div class="cta-row">
-    <button class="btn btn-g" style="font-size:.9rem;padding:14px 30px" onclick="openChat()">Stel uw eerste vraag gratis →</button>
-    <button class="btn btn-o" style="font-size:.85rem" onclick="showAppPopup()">Download de app</button>
+    <button type="button" class="btn btn-g" style="font-size:.9rem;padding:14px 30px" onclick="openChat()">Stel uw eerste vraag gratis →</button>
+    <button type="button" class="btn btn-o" style="font-size:.85rem" onclick="showAppPopup()">Download de app</button>
   </div>
   <div class="cta-note"><span data-i18n="cta_note">Geen verplichtingen · Geen creditcard vereist · Volledig vertrouwelijk</span></div>
 </section>
@@ -1283,7 +1283,7 @@ function sendChatMsg(e){
       +'<div style="max-width:82%;display:flex;flex-direction:column;gap:5px">'
       +'<div style="padding:10px 13px;border-radius:13px;border-bottom-left-radius:3px;background:rgba(255,255,255,.05);color:var(--text);font-size:.8rem;line-height:1.6">'+reply.answer+(srcHtml?'<div style="margin-top:6px">'+srcHtml+'</div>':'')+'</div>'
       +'<div style="display:flex;align-items:center;gap:7px;background:rgba(61,186,154,.08);border:1px solid rgba(61,186,154,.2);border-radius:7px;padding:6px 10px;font-size:.69rem;color:#7ad4b4"><span>✓</span><span>'+verifiedLabel+' <strong style="color:#b0ead2">'+reply.expert+'</strong>, '+reply.role+'</span><span style="margin-left:auto;color:var(--muted);font-size:.65rem">'+reply.date+'</span></div>'
-      +'<div style="display:flex;align-items:center;gap:8px;background:rgba(196,148,30,.07);border:1px solid var(--bdr2);border-radius:9px;padding:8px 11px;font-size:.72rem;color:var(--gold2)"><span>'+escalateText+'</span><button onclick="closeChat();showConsult()" style="margin-left:auto;background:var(--gold);color:var(--b0);border:none;padding:5px 11px;border-radius:6px;font-size:.68rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0">'+bookBtn+'</button></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;background:rgba(196,148,30,.07);border:1px solid var(--bdr2);border-radius:9px;padding:8px 11px;font-size:.72rem;color:var(--gold2)"><span>'+escalateText+'</span><button type="button" onclick="closeChat();showConsult()" style="margin-left:auto;background:var(--gold);color:var(--b0);border:none;padding:5px 11px;border-radius:6px;font-size:.68rem;font-weight:500;cursor:pointer;white-space:nowrap;flex-shrink:0">'+bookBtn+'</button></div>'
       +'</div>';
     area.appendChild(arow);
     area.scrollTop=area.scrollHeight;
@@ -1342,7 +1342,7 @@ function closeConsult(){
       </div>
       <div style="display:flex;gap:10px;align-items:center">
         <div id="chat-modal-conf-header" style="font-size:.72rem;color:var(--muted)">🔐 Volledig vertrouwelijk</div>
-        <button onclick="closeChat()" style="background:rgba(255,255,255,.07);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center">×</button>
+        <button type="button" onclick="closeChat()" style="background:rgba(255,255,255,.07);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center">×</button>
       </div>
     </div>
 
@@ -1357,10 +1357,10 @@ function closeConsult(){
             Stel uw vraag over <strong>recht, fiscaal, boekhouden, investeren, HR</strong> of een ander onderwerp. Of kies een suggestie hieronder.
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
-            <button onclick="document.getElementById('chat-inp').value='Hoe minimaliseer ik erfbelasting?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr2);color:var(--gold2);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">💶 Erfbelasting</button>
-            <button onclick="document.getElementById('chat-inp').value='Wanneer is een BV oprichten slim?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">🏢 BV oprichten</button>
-            <button onclick="document.getElementById('chat-inp').value='Wat zijn de BTW-regels buitenland?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">💶 BTW buitenland</button>
-            <button onclick="document.getElementById('chat-inp').value='Ontslag op staande voet — wat mag?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">⚖️ Ontslag</button>
+            <button type="button" onclick="document.getElementById('chat-inp').value='Hoe minimaliseer ik erfbelasting?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr2);color:var(--gold2);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">💶 Erfbelasting</button>
+            <button type="button" onclick="document.getElementById('chat-inp').value='Wanneer is een BV oprichten slim?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">🏢 BV oprichten</button>
+            <button type="button" onclick="document.getElementById('chat-inp').value='Wat zijn de BTW-regels buitenland?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">💶 BTW buitenland</button>
+            <button type="button" onclick="document.getElementById('chat-inp').value='Ontslag op staande voet — wat mag?';sendChatMsg()" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);font-size:.69rem;padding:5px 10px;border-radius:6px;cursor:pointer;font-family:'Inter',sans-serif">⚖️ Ontslag</button>
           </div>
         </div>
       </div>
@@ -1371,7 +1371,7 @@ function closeConsult(){
       <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:10px;display:flex;align-items:center;padding:8px 14px;gap:8px">
         <input id="chat-inp" style="flex:1;background:none;border:none;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none" placeholder="Stel uw vraag…" onkeydown="sendChatMsg(event)">
       </div>
-      <button onclick="sendChatMsg()" style="background:var(--gold);border:none;width:38px;height:38px;border-radius:9px;cursor:pointer;color:var(--b0);font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s" onmouseover="this.style.background='var(--gold2)'" onmouseout="this.style.background='var(--gold)'">↑</button>
+      <button type="button" onclick="sendChatMsg()" style="background:var(--gold);border:none;width:38px;height:38px;border-radius:9px;cursor:pointer;color:var(--b0);font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s" onmouseover="this.style.background='var(--gold2)'" onmouseout="this.style.background='var(--gold)'">↑</button>
     </div>
     <div id="chat-modal-disclaimer" style="text-align:center;padding:0 20px 14px;font-size:.67rem;color:var(--muted)">🤖 U spreekt met een AI — conform EU AI Act 2026 · 🔐 Uw gesprek is volledig vertrouwelijk</div>
   </div>
@@ -1384,7 +1384,7 @@ function closeConsult(){
   <div style="width:100%;max-width:520px;background:var(--b2);border:1px solid var(--bdr2);border-radius:20px;overflow:hidden;margin:20px;box-shadow:0 40px 100px rgba(0,0,0,.7)">
     <div style="background:var(--b1);padding:16px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr)">
       <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:400">Expert <em style="font-style:italic;color:var(--gold)">raadplegen</em></div>
-      <button onclick="closeConsult()" style="background:rgba(255,255,255,.07);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center">×</button>
+      <button type="button" onclick="closeConsult()" style="background:rgba(255,255,255,.07);border:none;width:30px;height:30px;border-radius:50%;cursor:pointer;color:var(--muted);font-size:16px;display:flex;align-items:center;justify-content:center">×</button>
     </div>
     <div style="padding:22px">
       <div style="display:flex;flex-direction:column;gap:9px">
@@ -1408,7 +1408,7 @@ function closeConsult(){
         <span>🔐</span>
         <div style="font-size:.74rem;color:var(--muted)"><strong style="color:var(--teal)">Volledig vertrouwelijk</strong> — Wettelijk beroepsgeheim · NDA ondertekend · Gegevens worden niet bewaard zonder uw toestemming</div>
       </div>
-      <button onclick="closeConsult()" style="width:100%;background:var(--gold);color:var(--b0);border:none;padding:13px;border-radius:10px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer">Consult bevestigen →</button>
+      <button type="button" onclick="closeConsult()" style="width:100%;background:var(--gold);color:var(--b0);border:none;padding:13px;border-radius:10px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer">Consult bevestigen →</button>
     </div>
   </div>
 </div>
@@ -1418,7 +1418,7 @@ function closeConsult(){
 ════════════════════════════════════ -->
 <div id="app-popup" style="display:none;position:fixed;bottom:24px;right:24px;z-index:500;width:300px;background:var(--b2);border:1px solid var(--bdr2);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.6);overflow:hidden;animation:slideup .4s ease-out">
   <div style="background:linear-gradient(135deg,#1c1608,#2a1e08);padding:16px 18px;position:relative">
-    <button onclick="closeAppPopup()" style="position:absolute;top:10px;right:12px;background:rgba(255,255,255,.08);border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;color:var(--muted);font-size:13px;display:flex;align-items:center;justify-content:center">×</button>
+    <button type="button" onclick="closeAppPopup()" style="position:absolute;top:10px;right:12px;background:rgba(255,255,255,.08);border:none;width:24px;height:24px;border-radius:50%;cursor:pointer;color:var(--muted);font-size:13px;display:flex;align-items:center;justify-content:center">×</button>
     <div style="font-family:'Playfair Display',serif;font-size:.95rem;font-weight:500;color:var(--text);margin-bottom:3px">Download de <em style="font-style:italic;color:var(--gold)">Wijzer</em> app</div>
     <div style="font-size:.72rem;color:var(--muted)">Alle functies in uw broekzak</div>
   </div>
@@ -1447,10 +1447,10 @@ function closeConsult(){
       </div>
     </div>
     <div style="display:flex;gap:8px">
-      <button onclick="closeAppPopup()" style="flex:1;background:var(--b0);border:1px solid var(--bdr);border-radius:9px;padding:10px 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif;font-size:.72rem;color:var(--text);transition:border-color .2s" onmouseover="this.style.borderColor='var(--bdr2)'" onmouseout="this.style.borderColor='var(--bdr)'">
+      <button type="button" onclick="closeAppPopup()" style="flex:1;background:var(--b0);border:1px solid var(--bdr);border-radius:9px;padding:10px 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif;font-size:.72rem;color:var(--text);transition:border-color .2s" onmouseover="this.style.borderColor='var(--bdr2)'" onmouseout="this.style.borderColor='var(--bdr)'">
         <span style="font-size:16px">🍎</span> App Store
       </button>
-      <button onclick="closeAppPopup()" style="flex:1;background:var(--b0);border:1px solid var(--bdr);border-radius:9px;padding:10px 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif;font-size:.72rem;color:var(--text);transition:border-color .2s" onmouseover="this.style.borderColor='var(--bdr2)'" onmouseout="this.style.borderColor='var(--bdr)'">
+      <button type="button" onclick="closeAppPopup()" style="flex:1;background:var(--b0);border:1px solid var(--bdr);border-radius:9px;padding:10px 8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif;font-size:.72rem;color:var(--text);transition:border-color .2s" onmouseover="this.style.borderColor='var(--bdr2)'" onmouseout="this.style.borderColor='var(--bdr)'">
         <span style="font-size:16px">🤖</span> Google Play
       </button>
     </div>
@@ -1540,7 +1540,7 @@ function closeConsult(){
   <div class="sp-inner">
     <div class="sp-top" id="sp-top-privacy">
       <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)">W<em style="font-style:italic;color:var(--gold)">i</em>jzer · Privacy Policy</div>
-      <button class="sp-close" onclick="closeSP('privacy')">×</button>
+      <button type="button" class="sp-close" onclick="closeSP('privacy')">×</button>
     </div>
     <div class="sp-body" id="sp-body-privacy">
       <div class="sp-eyebrow">Juridisch</div>
@@ -1583,7 +1583,7 @@ function closeConsult(){
   <div class="sp-inner">
     <div class="sp-top">
       <div style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)">W<em style="font-style:italic;color:var(--gold)">i</em>jzer · Algemene Voorwaarden</div>
-      <button class="sp-close" onclick="closeSP('voorwaarden')">×</button>
+      <button type="button" class="sp-close" onclick="closeSP('voorwaarden')">×</button>
     </div>
     <div class="sp-body" id="sp-body-voorwaarden">
       <div class="sp-eyebrow">Juridisch</div>
@@ -1612,7 +1612,7 @@ function closeConsult(){
   <div class="sp-inner">
     <div class="sp-top">
       <div id="sp-header-pakketten" style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)">W<em style="font-style:italic;color:var(--gold)">i</em>jzer · Servicepakketten</div>
-      <button class="sp-close" onclick="closeSP('pakketten')">×</button>
+      <button type="button" class="sp-close" onclick="closeSP('pakketten')">×</button>
     </div>
     <div class="sp-body" id="sp-body-pakketten">
       <div class="sp-eyebrow">Vaste tarieven</div>
@@ -1626,12 +1626,12 @@ function closeConsult(){
         <div class="sp-tab" onclick="filterSpPkg(this,'compliance')">🛡 Compliance</div>
       </div>
       <div class="sp-pkg-grid" id="sp-pkg-grid">
-        <div class="sp-pkg" data-cat="fiscaal"><div class="sp-pkg-t">Erfbelasting analyse & optimalisatie</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">tarief o.b.v. boedel · gratis intake</span><div class="sp-pkg-d" id="sp-pkg-erf-desc">Volledige doorrekening van alle toepasselijke vrijstellingen, schenkingsstrategieën, de meest gunstige aanvaardingsvorm, begeleiding bij de aangifte erfbelasting en de optimale testamentstructuur.</div><button class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
-        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsoprichting volledig ontzorgd</div><div class="sp-pkg-price">v.a. €450</div><span class="sp-pkg-per">vaste prijs · incl. btw</span><div class="sp-pkg-d">Rechtsvorm-advies, statuten, KvK-inschrijving en eerste belasting-setup. Van idee tot operationele onderneming.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Pakket aanvragen</button></div>
-        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Arbeidscontract beoordeling</div><div class="sp-pkg-price">€150</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Advocaat beoordeelt uw contract op risico's. Incl. schriftelijk rapport en 30 min. nabespreking.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
-        <div class="sp-pkg" data-cat="compliance"><div class="sp-pkg-t">AVG compliance audit MKB</div><div class="sp-pkg-price">€350</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Verwerkingsregister, privacybeleid, risicoscan datalekken en actielijst voor directe naleving.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
-        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsovername begeleiding</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">gratis intake · o.b.v. transactie</span><div class="sp-pkg-d">Due diligence, overnamecontract, fiscale structurering en notarieel traject.</div><button class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
-        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Huurcontract beoordeling</div><div class="sp-pkg-price">€95</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Jurist checkt alle clausules. Incl. schriftelijke bevindingen en 20 min. toelichting.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
+        <div class="sp-pkg" data-cat="fiscaal"><div class="sp-pkg-t">Erfbelasting analyse & optimalisatie</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">tarief o.b.v. boedel · gratis intake</span><div class="sp-pkg-d" id="sp-pkg-erf-desc">Volledige doorrekening van alle toepasselijke vrijstellingen, schenkingsstrategieën, de meest gunstige aanvaardingsvorm, begeleiding bij de aangifte erfbelasting en de optimale testamentstructuur.</div><button type="button" class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
+        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsoprichting volledig ontzorgd</div><div class="sp-pkg-price">v.a. €450</div><span class="sp-pkg-per">vaste prijs · incl. btw</span><div class="sp-pkg-d">Rechtsvorm-advies, statuten, KvK-inschrijving en eerste belasting-setup. Van idee tot operationele onderneming.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Pakket aanvragen</button></div>
+        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Arbeidscontract beoordeling</div><div class="sp-pkg-price">€150</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Advocaat beoordeelt uw contract op risico's. Incl. schriftelijk rapport en 30 min. nabespreking.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
+        <div class="sp-pkg" data-cat="compliance"><div class="sp-pkg-t">AVG compliance audit MKB</div><div class="sp-pkg-price">€350</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Verwerkingsregister, privacybeleid, risicoscan datalekken en actielijst voor directe naleving.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
+        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsovername begeleiding</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">gratis intake · o.b.v. transactie</span><div class="sp-pkg-d">Due diligence, overnamecontract, fiscale structurering en notarieel traject.</div><button type="button" class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
+        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Huurcontract beoordeling</div><div class="sp-pkg-price">€95</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Jurist checkt alle clausules. Incl. schriftelijke bevindingen en 20 min. toelichting.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
       </div>
       <div class="sp-hr"></div>
       <div class="sp-h2">Losse consultatie<em>tarieven</em></div>
@@ -1655,7 +1655,7 @@ function closeConsult(){
   <div class="sp-inner">
     <div class="sp-top">
       <div id="sp-header-experts" style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)">W<em style="font-style:italic;color:var(--gold)">i</em>jzer · Expert worden</div>
-      <button class="sp-close" onclick="closeSP('experts')">×</button>
+      <button type="button" class="sp-close" onclick="closeSP('experts')">×</button>
     </div>
     <div class="sp-body" id="sp-body-experts">
       <div class="sp-eyebrow">Voor professionals</div>
@@ -1686,7 +1686,7 @@ function closeConsult(){
       </div>
       <div class="sp-hr"></div>
       <p class="sp-p" style="font-weight:500;color:var(--text)">Interesse? Meld u aan via het contactformulier.</p>
-      <button onclick="closeSP('experts');openSP('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:12px 24px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:background .2s">Aanmelden als expert →</button>
+      <button type="button" onclick="closeSP('experts');openSP('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:12px 24px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:background .2s">Aanmelden als expert →</button>
     </div>
   </div>
 </div>
@@ -1696,7 +1696,7 @@ function closeConsult(){
   <div class="sp-inner">
     <div class="sp-top">
       <div id="sp-header-contact" style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--text)">W<em style="font-style:italic;color:var(--gold)">i</em>jzer · Contact</div>
-      <button class="sp-close" onclick="closeSP('contact')">×</button>
+      <button type="button" class="sp-close" onclick="closeSP('contact')">×</button>
     </div>
     <div class="sp-body" id="sp-body-contact" style="display:grid;grid-template-columns:1fr 1fr;gap:36px;max-height:none">
       <div>
@@ -1711,9 +1711,9 @@ function closeConsult(){
         <div style="margin-top:16px;background:rgba(61,186,154,.05);border:1px solid rgba(61,186,154,.15);border-radius:9px;padding:11px 13px;font-size:.76rem;color:var(--muted)">🔐 Uw bericht valt onder onze geheimhoudingsplicht en wordt verwerkt conform de AVG.</div>
       </div>
       <div class="sp-form" id="sp-contact-form">
-        <div class="field"><label>Uw naam *</label><input type="text" id="sp-naam" placeholder="Jan de Vries"></div>
-        <div class="field"><label>E-mailadres *</label><input type="email" id="sp-email" placeholder="jan@bedrijf.nl"></div>
-        <div class="field"><label>Onderwerp</label>
+        <div class="field"><label for="sp-naam">Uw naam *</label><input type="text" id="sp-naam" placeholder="Jan de Vries"></div>
+        <div class="field"><label for="sp-email">E-mailadres *</label><input type="email" id="sp-email" placeholder="jan@bedrijf.nl"></div>
+        <div class="field"><label for="sp-onderwerp">Onderwerp</label>
           <select id="sp-onderwerp">
             <option value="">Kies een onderwerp…</option>
             <option value="pakket">Servicepakket aanvragen</option>
@@ -1724,8 +1724,8 @@ function closeConsult(){
             <option value="anders">Overig</option>
           </select>
         </div>
-        <div class="field"><label>Uw bericht *</label><textarea id="sp-bericht" placeholder="Beschrijf uw vraag of situatie…"></textarea></div>
-        <button onclick="submitSPForm()" style="width:100%;background:var(--gold);color:var(--b0);border:none;padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;margin-top:4px">Verstuur bericht →</button>
+        <div class="field"><label for="sp-bericht">Uw bericht *</label><textarea id="sp-bericht" placeholder="Beschrijf uw vraag of situatie…"></textarea></div>
+        <button type="button" onclick="submitSPForm()" style="width:100%;background:var(--gold);color:var(--b0);border:none;padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;margin-top:4px">Verstuur bericht →</button>
       </div>
       <div id="sp-contact-success" style="display:none;grid-column:1/-1;text-align:center;padding:32px 0">
         <div style="font-size:36px;margin-bottom:12px">✅</div>
@@ -2213,12 +2213,12 @@ function applySiteLang() {
         <div class="sp-tab" onclick="filterSpPkg(this,'compliance')">🛡 Compliance</div>
       </div>
       <div class="sp-pkg-grid" id="sp-pkg-grid">
-        <div class="sp-pkg" data-cat="fiscaal"><div class="sp-pkg-t">Inheritance tax analysis & optimisation</div><div class="sp-pkg-price">Situational</div><span class="sp-pkg-per">rate based on estate · free intake</span><div class="sp-pkg-d">Complete analysis of all applicable exemptions, gifting strategies, the most favourable form of acceptance, inheritance tax filing guidance and optimal will structure.</div><button class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Free intake →</button></div>
-        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Company formation fully arranged</div><div class="sp-pkg-price">from €450</div><span class="sp-pkg-per">fixed price · incl. VAT</span><div class="sp-pkg-d">Legal form advice, articles of association, KvK registration and first tax setup. From first idea to operational company.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Request package</button></div>
-        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Employment contract review</div><div class="sp-pkg-price">€150</div><span class="sp-pkg-per">fixed rate · incl. VAT</span><div class="sp-pkg-d">Barrister reviews your contract for risks. Includes written report and 30 min debrief.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Book directly</button></div>
-        <div class="sp-pkg" data-cat="compliance"><div class="sp-pkg-t">GDPR compliance audit SME</div><div class="sp-pkg-price">€350</div><span class="sp-pkg-per">fixed rate · incl. VAT</span><div class="sp-pkg-d">Processing register, privacy policy, data breach risk scan and action list for immediate compliance.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Book directly</button></div>
-        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Business acquisition guidance</div><div class="sp-pkg-price">Situational</div><span class="sp-pkg-per">free intake · based on transaction</span><div class="sp-pkg-d">Due diligence, acquisition agreement, fiscal structuring and notarial process.</div><button class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Free intake →</button></div>
-        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Lease contract review</div><div class="sp-pkg-price">€95</div><span class="sp-pkg-per">fixed rate · incl. VAT</span><div class="sp-pkg-d">Lawyer checks all clauses. Includes written findings and 20 min explanation.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Book directly</button></div>
+        <div class="sp-pkg" data-cat="fiscaal"><div class="sp-pkg-t">Inheritance tax analysis & optimisation</div><div class="sp-pkg-price">Situational</div><span class="sp-pkg-per">rate based on estate · free intake</span><div class="sp-pkg-d">Complete analysis of all applicable exemptions, gifting strategies, the most favourable form of acceptance, inheritance tax filing guidance and optimal will structure.</div><button type="button" class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Free intake →</button></div>
+        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Company formation fully arranged</div><div class="sp-pkg-price">from €450</div><span class="sp-pkg-per">fixed price · incl. VAT</span><div class="sp-pkg-d">Legal form advice, articles of association, KvK registration and first tax setup. From first idea to operational company.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Request package</button></div>
+        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Employment contract review</div><div class="sp-pkg-price">€150</div><span class="sp-pkg-per">fixed rate · incl. VAT</span><div class="sp-pkg-d">Barrister reviews your contract for risks. Includes written report and 30 min debrief.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Book directly</button></div>
+        <div class="sp-pkg" data-cat="compliance"><div class="sp-pkg-t">GDPR compliance audit SME</div><div class="sp-pkg-price">€350</div><span class="sp-pkg-per">fixed rate · incl. VAT</span><div class="sp-pkg-d">Processing register, privacy policy, data breach risk scan and action list for immediate compliance.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Book directly</button></div>
+        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Business acquisition guidance</div><div class="sp-pkg-price">Situational</div><span class="sp-pkg-per">free intake · based on transaction</span><div class="sp-pkg-d">Due diligence, acquisition agreement, fiscal structuring and notarial process.</div><button type="button" class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Free intake →</button></div>
+        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Lease contract review</div><div class="sp-pkg-price">€95</div><span class="sp-pkg-per">fixed rate · incl. VAT</span><div class="sp-pkg-d">Lawyer checks all clauses. Includes written findings and 20 min explanation.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Book directly</button></div>
       </div>
       <div class="sp-hr"></div>
       <div class="sp-h2">Individual consultation <em>rates</em></div>
@@ -2242,12 +2242,12 @@ function applySiteLang() {
         <div class="sp-tab" onclick="filterSpPkg(this,'compliance')">🛡 Compliance</div>
       </div>
       <div class="sp-pkg-grid" id="sp-pkg-grid">
-        <div class="sp-pkg" data-cat="fiscaal"><div class="sp-pkg-t">Erfbelasting analyse & optimalisatie</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">tarief o.b.v. boedel · gratis intake</span><div class="sp-pkg-d">Volledige doorrekening van alle toepasselijke vrijstellingen, schenkingsstrategieën, de meest gunstige aanvaardingsvorm, begeleiding bij de aangifte erfbelasting en de optimale testamentstructuur.</div><button class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
-        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsoprichting volledig ontzorgd</div><div class="sp-pkg-price">v.a. €450</div><span class="sp-pkg-per">vaste prijs · incl. btw</span><div class="sp-pkg-d">Rechtsvorm-advies, statuten, KvK-inschrijving en eerste belasting-setup. Van idee tot operationele onderneming.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Pakket aanvragen</button></div>
-        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Arbeidscontract beoordeling</div><div class="sp-pkg-price">€150</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Advocaat beoordeelt uw contract op risico's. Incl. schriftelijk rapport en 30 min. nabespreking.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
-        <div class="sp-pkg" data-cat="compliance"><div class="sp-pkg-t">AVG compliance audit MKB</div><div class="sp-pkg-price">€350</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Verwerkingsregister, privacybeleid, risicoscan datalekken en actielijst voor directe naleving.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
-        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsovername begeleiding</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">gratis intake · o.b.v. transactie</span><div class="sp-pkg-d">Due diligence, overnamecontract, fiscale structurering en notarieel traject.</div><button class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
-        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Huurcontract beoordeling</div><div class="sp-pkg-price">€95</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Jurist checkt alle clausules. Incl. schriftelijke bevindingen en 20 min. toelichting.</div><button class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
+        <div class="sp-pkg" data-cat="fiscaal"><div class="sp-pkg-t">Erfbelasting analyse & optimalisatie</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">tarief o.b.v. boedel · gratis intake</span><div class="sp-pkg-d">Volledige doorrekening van alle toepasselijke vrijstellingen, schenkingsstrategieën, de meest gunstige aanvaardingsvorm, begeleiding bij de aangifte erfbelasting en de optimale testamentstructuur.</div><button type="button" class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
+        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsoprichting volledig ontzorgd</div><div class="sp-pkg-price">v.a. €450</div><span class="sp-pkg-per">vaste prijs · incl. btw</span><div class="sp-pkg-d">Rechtsvorm-advies, statuten, KvK-inschrijving en eerste belasting-setup. Van idee tot operationele onderneming.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Pakket aanvragen</button></div>
+        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Arbeidscontract beoordeling</div><div class="sp-pkg-price">€150</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Advocaat beoordeelt uw contract op risico's. Incl. schriftelijk rapport en 30 min. nabespreking.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
+        <div class="sp-pkg" data-cat="compliance"><div class="sp-pkg-t">AVG compliance audit MKB</div><div class="sp-pkg-price">€350</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Verwerkingsregister, privacybeleid, risicoscan datalekken en actielijst voor directe naleving.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
+        <div class="sp-pkg" data-cat="bedrijf"><div class="sp-pkg-t">Bedrijfsovername begeleiding</div><div class="sp-pkg-price">Situationeel</div><span class="sp-pkg-per">gratis intake · o.b.v. transactie</span><div class="sp-pkg-d">Due diligence, overnamecontract, fiscale structurering en notarieel traject.</div><button type="button" class="sp-pkg-btn" onclick="closeSP('pakketten');openSP('contact')">Gratis intake →</button></div>
+        <div class="sp-pkg" data-cat="juridisch"><div class="sp-pkg-t">Huurcontract beoordeling</div><div class="sp-pkg-price">€95</div><span class="sp-pkg-per">vast tarief · incl. btw</span><div class="sp-pkg-d">Jurist checkt alle clausules. Incl. schriftelijke bevindingen en 20 min. toelichting.</div><button type="button" class="sp-pkg-btn out" onclick="closeSP('pakketten');openSP('contact')">Direct boeken</button></div>
       </div>
       <div class="sp-hr"></div>
       <div class="sp-h2">Losse consultatie<em>tarieven</em></div>
@@ -2296,7 +2296,7 @@ function applySiteLang() {
       </div>
       <div class="sp-hr"></div>
       <p class="sp-p" style="font-weight:500;color:var(--text)">Interested? Apply via the contact form.</p>
-      <button onclick="closeSP('experts');openSP('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:12px 24px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer">Apply as expert →</button>
+      <button type="button" onclick="closeSP('experts');openSP('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:12px 24px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer">Apply as expert →</button>
     ` : `
       <div class="sp-eyebrow">Voor professionals</div>
       <div class="sp-h1">Word <em>Wijzer</em>-expert</div>
@@ -2326,7 +2326,7 @@ function applySiteLang() {
       </div>
       <div class="sp-hr"></div>
       <p class="sp-p" style="font-weight:500;color:var(--text)">Interesse? Meld u aan via het contactformulier.</p>
-      <button onclick="closeSP('experts');openSP('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:12px 24px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer">Aanmelden als expert →</button>
+      <button type="button" onclick="closeSP('experts');openSP('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:12px 24px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer">Aanmelden als expert →</button>
     `;
   }
 
@@ -2734,7 +2734,7 @@ function applyModalsLang() {
     var MC2 = (modalContent[L]||modalContent.nl)[pg];
     if (!MC2) return;
     var body = page.querySelector('.sp-wrap');
-    if (body) body.innerHTML = '<button class="sp-back" onclick="goPage(\'home\')">← ' + (L==='en'?'Back to home':'Terug naar home') + '</button>' + MC2.body;
+    if (body) body.innerHTML = '<button type="button" class="sp-back" onclick="goPage(\'home\')">← ' + (L==='en'?'Back to home':'Terug naar home') + '</button>' + MC2.body;
   });
 }
 
@@ -2909,7 +2909,7 @@ window.goPage = goPage;
 <!-- ─ PAGE: PRIVACY ─ -->
 <div id="page-privacy" class="page-section">
   <div class="sp-wrap">
-    <button class="sp-back" onclick="goPage('home')">← Terug naar home</button>
+    <button type="button" class="sp-back" onclick="goPage('home')">← Terug naar home</button>
     <div class="sp-eyebrow">Juridisch</div>
     <div class="sp-h1">Privacy <em>Policy</em></div>
     <div class="sp-meta">Wijzer B.V. · KVK 12345678 · Bijgewerkt: 1 januari 2026</div>
@@ -2958,7 +2958,7 @@ window.goPage = goPage;
 <!-- ─ PAGE: VOORWAARDEN ─ -->
 <div id="page-voorwaarden" class="page-section">
   <div class="sp-wrap">
-    <button class="sp-back" onclick="goPage('home')">← Terug naar home</button>
+    <button type="button" class="sp-back" onclick="goPage('home')">← Terug naar home</button>
     <div class="sp-eyebrow">Juridisch</div>
     <div class="sp-h1">Algemene <em>Voorwaarden</em></div>
     <div class="sp-meta">Versie 2.1 · Van kracht vanaf 1 januari 2026</div>
@@ -2995,7 +2995,7 @@ window.goPage = goPage;
 <!-- ─ PAGE: EXPERTS WORDEN ─ -->
 <div id="page-experts" class="page-section">
   <div class="sp-wrap-wide">
-    <button class="sp-back" onclick="goPage('home')">← Terug naar home</button>
+    <button type="button" class="sp-back" onclick="goPage('home')">← Terug naar home</button>
     <div class="sp-eyebrow">Voor professionals</div>
     <div class="sp-h1">Word <em>Wijzer</em>-expert</div>
     <p class="sp-lead">Deel uw kennis, verdien eerlijk aan consulten en bouw een extra inkomstenstroom op — zonder administratieve rompslomp.</p>
@@ -3031,7 +3031,7 @@ window.goPage = goPage;
     </div>
 
     <div style="margin-top:28px">
-      <button onclick="goPage('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:13px 26px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:background .2s">Aanmelden als expert →</button>
+      <button type="button" onclick="goPage('contact')" style="background:var(--gold);color:var(--b0);border:none;padding:13px 26px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.88rem;font-weight:500;cursor:pointer;transition:background .2s">Aanmelden als expert →</button>
     </div>
   </div>
   <div class="sp-footer">
@@ -3050,7 +3050,7 @@ window.goPage = goPage;
 <!-- ─ PAGE: PAKKETTEN ─ -->
 <div id="page-pakketten" class="page-section">
   <div class="sp-wrap-wide">
-    <button class="sp-back" onclick="goPage('home')">← Terug naar home</button>
+    <button type="button" class="sp-back" onclick="goPage('home')">← Terug naar home</button>
     <div class="sp-eyebrow">Vaste tarieven</div>
     <div class="sp-h1">Service<em>pakketten</em></div>
     <p class="sp-lead">Weet exact wat u betaalt — vóórdat u begint. Transparante vaste tarieven, altijd vooraf bevestigd.</p>
@@ -3070,7 +3070,7 @@ window.goPage = goPage;
         <span class="sp-pkg-per">tarief o.b.v. boedel · gratis intake gesprek</span>
         <div class="sp-pkg-d">Volledige doorrekening: vrijstellingen (€26.230 kind, €6.908 jaarlijks ouder → kind, €33.129 eenmalig 18–40 jr), papieren schenkingen, jubelton-status (afgeschaft) en meest gunstige aanvaardingsvorm. Tarief na intake vastgesteld, altijd schriftelijk bevestigd.</div>
         <ul class="sp-pkg-inc"><li><span class="ck">✓</span>Inventarisatie boedel & vrijstellingen</li><li><span class="ck">✓</span>Berekening optimale strategie</li><li><span class="ck">✓</span>Begeleiding aangifte erfbelasting</li><li><span class="ck">✓</span>Schriftelijk adviesrapport</li></ul>
-        <button class="sp-btn-gold" onclick="goPage('contact')">Gratis intake aanvragen</button>
+        <button type="button" class="sp-btn-gold" onclick="goPage('contact')">Gratis intake aanvragen</button>
       </div>
       <div class="sp-pkg" data-cat="bedrijf">
         <div class="sp-pkg-t">Bedrijfsoprichting volledig ontzorgd</div>
@@ -3078,7 +3078,7 @@ window.goPage = goPage;
         <span class="sp-pkg-per">vaste prijs · incl. btw</span>
         <div class="sp-pkg-d">Van rechtsvorm-advies tot KvK-inschrijving en oprichting. Onze bedrijfscoaches en juristen begeleiden u van eerste idee tot operationele onderneming.</div>
         <ul class="sp-pkg-inc"><li><span class="ck">✓</span>Rechtsvorm advies (BV, VOF, eenmanszaak)</li><li><span class="ck">✓</span>Statuten & oprichtingsdocumenten</li><li><span class="ck">✓</span>KvK-inschrijving begeleiding</li><li><span class="ck">✓</span>Eerste belasting & BTW setup</li></ul>
-        <button class="sp-btn-out" onclick="goPage('contact')">Pakket aanvragen</button>
+        <button type="button" class="sp-btn-out" onclick="goPage('contact')">Pakket aanvragen</button>
       </div>
       <div class="sp-pkg" data-cat="juridisch">
         <div class="sp-pkg-t">Arbeidscontract beoordeling & advies</div>
@@ -3086,7 +3086,7 @@ window.goPage = goPage;
         <span class="sp-pkg-per">vast tarief · incl. btw</span>
         <div class="sp-pkg-d">Advocaat beoordeelt uw contract op risico's, ongunstige clausules en wettelijke haalbaarheid. Incl. schriftelijk rapport en 30 min. nabespreking.</div>
         <ul class="sp-pkg-inc"><li><span class="ck">✓</span>Beoordeling door advocaat</li><li><span class="ck">✓</span>Schriftelijk rapport</li><li><span class="ck">✓</span>30 min. nabespreking inbegrepen</li></ul>
-        <button class="sp-btn-out" onclick="goPage('contact')">Direct boeken</button>
+        <button type="button" class="sp-btn-out" onclick="goPage('contact')">Direct boeken</button>
       </div>
       <div class="sp-pkg" data-cat="compliance">
         <div class="sp-pkg-t">AVG compliance audit voor MKB</div>
@@ -3094,7 +3094,7 @@ window.goPage = goPage;
         <span class="sp-pkg-per">vast tarief · incl. btw</span>
         <div class="sp-pkg-d">Verwerkingsregister, privacybeleid, risicoscan datalekken en prioritaire actielijst voor naleving conform AVG 2026.</div>
         <ul class="sp-pkg-inc"><li><span class="ck">✓</span>Verwerkingsregister opstellen</li><li><span class="ck">✓</span>Privacybeleid beoordelen/schrijven</li><li><span class="ck">✓</span>Risicoscan datalekken</li><li><span class="ck">✓</span>Actielijst naleving</li></ul>
-        <button class="sp-btn-out" onclick="goPage('contact')">Direct boeken</button>
+        <button type="button" class="sp-btn-out" onclick="goPage('contact')">Direct boeken</button>
       </div>
       <div class="sp-pkg" data-cat="bedrijf">
         <div class="sp-pkg-t">Bedrijfsovername begeleiding</div>
@@ -3102,7 +3102,7 @@ window.goPage = goPage;
         <span class="sp-pkg-per">gratis intake · o.b.v. transactie</span>
         <div class="sp-pkg-d">Due diligence, overnamecontract, fiscale structurering en notarieel traject. Tarief na intake vastgesteld op basis van transactieomvang.</div>
         <ul class="sp-pkg-inc"><li><span class="ck">✓</span>Due diligence ondersteuning</li><li><span class="ck">✓</span>Overnamecontract opstellen</li><li><span class="ck">✓</span>Fiscale structurering</li><li><span class="ck">✓</span>Notarieel traject begeleiden</li></ul>
-        <button class="sp-btn-gold" onclick="goPage('contact')">Gratis intake aanvragen</button>
+        <button type="button" class="sp-btn-gold" onclick="goPage('contact')">Gratis intake aanvragen</button>
       </div>
       <div class="sp-pkg" data-cat="juridisch">
         <div class="sp-pkg-t">Huurcontract beoordeling (particulier)</div>
@@ -3110,7 +3110,7 @@ window.goPage = goPage;
         <span class="sp-pkg-per">vast tarief · incl. btw</span>
         <div class="sp-pkg-d">Jurist huurrecht checkt alle clausules op haalbaarheid en wettelijke conformiteit. Incl. schriftelijke bevindingen en 20 min. toelichting.</div>
         <ul class="sp-pkg-inc"><li><span class="ck">✓</span>Beoordeling door jurist huurrecht</li><li><span class="ck">✓</span>Schriftelijke bevindingen</li><li><span class="ck">✓</span>20 min. telefonische toelichting</li></ul>
-        <button class="sp-btn-out" onclick="goPage('contact')">Direct boeken</button>
+        <button type="button" class="sp-btn-out" onclick="goPage('contact')">Direct boeken</button>
       </div>
     </div>
 
@@ -3147,7 +3147,7 @@ window.goPage = goPage;
 <div id="page-contact" class="page-section">
   <div class="sp-wrap-contact">
     <div>
-      <button class="sp-back" onclick="goPage('home')">← Terug naar home</button>
+      <button type="button" class="sp-back" onclick="goPage('home')">← Terug naar home</button>
       <div class="sp-eyebrow">We helpen u graag</div>
       <div class="sp-h1">Neem <em>contact</em> op</div>
       <p class="sp-p">Vragen over een pakket, aanmelden als expert of hulp met uw account? Wij reageren binnen één werkdag.</p>
@@ -3163,9 +3163,9 @@ window.goPage = goPage;
       <div id="sp-page-form">
         <div style="font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--text);margin-bottom:4px">Stuur een <em style="font-style:italic;color:var(--gold)">bericht</em></div>
         <p style="font-size:.8rem;color:var(--muted);margin-bottom:20px">Wij reageren binnen één werkdag.</p>
-        <div class="sp-field"><label>Uw naam *</label><input type="text" id="spf-naam" placeholder="Jan de Vries"></div>
-        <div class="sp-field"><label>E-mailadres *</label><input type="email" id="spf-email" placeholder="jan@bedrijf.nl"></div>
-        <div class="sp-field"><label>Onderwerp</label>
+        <div class="sp-field"><label for="spf-naam">Uw naam *</label><input type="text" id="spf-naam" placeholder="Jan de Vries"></div>
+        <div class="sp-field"><label for="spf-email">E-mailadres *</label><input type="email" id="spf-email" placeholder="jan@bedrijf.nl"></div>
+        <div class="sp-field"><label for="spf-onderwerp">Onderwerp</label>
           <select id="spf-onderwerp">
             <option value="">Kies een onderwerp…</option>
             <option value="pakket">Servicepakket aanvragen</option>
@@ -3176,8 +3176,8 @@ window.goPage = goPage;
             <option value="anders">Overig</option>
           </select>
         </div>
-        <div class="sp-field"><label>Uw bericht *</label><textarea id="spf-bericht" placeholder="Beschrijf uw vraag of situatie…"></textarea></div>
-        <button onclick="submitPageForm()" style="width:100%;background:var(--gold);color:var(--b0);border:none;padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;margin-top:4px">Verstuur bericht →</button>
+        <div class="sp-field"><label for="spf-bericht">Uw bericht *</label><textarea id="spf-bericht" placeholder="Beschrijf uw vraag of situatie…"></textarea></div>
+        <button type="button" onclick="submitPageForm()" style="width:100%;background:var(--gold);color:var(--b0);border:none;padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.86rem;font-weight:500;cursor:pointer;margin-top:4px">Verstuur bericht →</button>
       </div>
       <div id="spf-success" style="display:none;text-align:center;padding:28px 0">
         <div style="font-size:36px;margin-bottom:12px">✅</div>
@@ -3319,20 +3319,20 @@ document.querySelectorAll('a[onclick*="scrollIntoView"]').forEach(function(a) {
   <div class="auth-box">
     <div class="auth-top">
       <div class="auth-logo">W<em>i</em>jzer</div>
-      <button class="auth-close" onclick="closeAuth()">&#215;</button>
+      <button type="button" class="auth-close" onclick="closeAuth()">&#215;</button>
     </div>
     <div class="auth-tabs">
-      <button class="auth-tab on" id="tab-login" onclick="switchAuthTab('login')">Inloggen</button>
-      <button class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Account aanmaken</button>
+      <button type="button" class="auth-tab on" id="tab-login" onclick="switchAuthTab('login')">Inloggen</button>
+      <button type="button" class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Account aanmaken</button>
     </div>
 
     <!-- LOGIN -->
     <div id="panel-login" class="auth-body" data-auth-panel="login">
       <p style="font-size:.83rem;color:var(--sub);margin-bottom:18px;line-height:1.6">Welkom terug. Log in om toegang te krijgen tot uw adviseur, experts en kennisbank.</p>
-      <div class="af"><label>E-mailadres</label><input type="email" id="li-email" placeholder="uw@email.nl" onkeydown="if(event.key==='Enter')doLogin()"><div class="af-error" id="li-email-err">Voer een geldig e-mailadres in</div></div>
-      <div class="af"><label>Wachtwoord</label><input type="password" id="li-pw" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.key==='Enter')doLogin()"><div class="af-error" id="li-pw-err">Wachtwoord is verplicht</div></div>
+      <div class="af"><label for="li-email">E-mailadres</label><input type="email" id="li-email" placeholder="uw@email.nl" onkeydown="if(event.key==='Enter')doLogin()"><div class="af-error" id="li-email-err">Voer een geldig e-mailadres in</div></div>
+      <div class="af"><label for="li-pw">Wachtwoord</label><input type="password" id="li-pw" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" onkeydown="if(event.key==='Enter')doLogin()"><div class="af-error" id="li-pw-err">Wachtwoord is verplicht</div></div>
       <div style="text-align:right;margin-bottom:14px"><span onclick="showPanel('forgot')" style="font-size:.73rem;color:var(--gold2);cursor:pointer">Wachtwoord vergeten?</span></div>
-      <button class="auth-btn" onclick="doLogin()">Inloggen</button>
+      <button type="button" class="auth-btn" onclick="doLogin()">Inloggen</button>
       <div class="auth-div">of</div>
       <div class="auth-note">Nog geen account? <a onclick="switchAuthTab('register')">Gratis registreren</a></div>
       <div style="margin-top:14px;background:rgba(61,186,154,.05);border:1px solid rgba(61,186,154,.15);border-radius:8px;padding:9px 12px;font-size:.71rem;color:var(--muted);display:flex;gap:7px">&#128272; Uw gegevens worden verwerkt conform de AVG &middot; Nooit doorverkoop van data</div>
@@ -3343,24 +3343,24 @@ document.querySelectorAll('a[onclick*="scrollIntoView"]').forEach(function(a) {
       <div class="auth-steps"><div class="auth-step-dot on"></div><div class="auth-step-dot"></div><div class="auth-step-dot"></div></div>
       <p style="font-size:.83rem;color:var(--sub);margin-bottom:16px">Stap 1 van 3 &mdash; <strong style="color:var(--text)">Uw gegevens</strong></p>
       <div class="af-row">
-        <div class="af"><label>Voornaam *</label><input type="text" id="r-fname" placeholder="Jan"><div class="af-error" id="r-fname-err">Verplicht</div></div>
-        <div class="af"><label>Achternaam *</label><input type="text" id="r-lname" placeholder="de Vries"><div class="af-error" id="r-lname-err">Verplicht</div></div>
+        <div class="af"><label for="r-fname">Voornaam *</label><input type="text" id="r-fname" placeholder="Jan"><div class="af-error" id="r-fname-err">Verplicht</div></div>
+        <div class="af"><label for="r-lname">Achternaam *</label><input type="text" id="r-lname" placeholder="de Vries"><div class="af-error" id="r-lname-err">Verplicht</div></div>
       </div>
-      <div class="af"><label>E-mailadres *</label><input type="email" id="r-email" placeholder="jan@email.nl"><div class="af-error" id="r-email-err">Voer een geldig e-mailadres in</div></div>
-      <div class="af"><label>Telefoonnummer</label><input type="tel" id="r-phone" placeholder="+31 6 12345678"></div>
+      <div class="af"><label for="r-email">E-mailadres *</label><input type="email" id="r-email" placeholder="jan@email.nl"><div class="af-error" id="r-email-err">Voer een geldig e-mailadres in</div></div>
+      <div class="af"><label for="r-phone">Telefoonnummer</label><input type="tel" id="r-phone" placeholder="+31 6 12345678"></div>
       <div class="af">
-        <label>Geboortedatum * <span style="font-size:.67rem;color:var(--muted)">(leeftijdscheck)</span></label>
+        <label for="r-dob">Geboortedatum * <span style="font-size:.67rem;color:var(--muted)">(leeftijdscheck)</span></label>
         <input type="date" id="r-dob" onchange="checkAge()" style="color-scheme:dark">
         <div class="af-error" id="r-dob-err">Geboortedatum is verplicht</div>
       </div>
       <div class="u18-block" id="u18-block">
         <div class="u18-title">&#128118; U bent jonger dan 18 jaar</div>
         <div class="u18-desc">Minderjarigen kunnen Wijzer gebruiken via het account van een ouder of voogd. Vul hieronder hun gegevens in &mdash; zij ontvangen een bevestigingsmail en moeten toestemming geven.</div>
-        <div class="af"><label>Naam ouder/voogd *</label><input type="text" id="r-parent-name" placeholder="Naam van ouder of voogd"></div>
-        <div class="af"><label>E-mail ouder/voogd *</label><input type="email" id="r-parent-email" placeholder="ouder@email.nl"></div>
+        <div class="af"><label for="r-parent-name">Naam ouder/voogd *</label><input type="text" id="r-parent-name" placeholder="Naam van ouder of voogd"></div>
+        <div class="af"><label for="r-parent-email">E-mail ouder/voogd *</label><input type="email" id="r-parent-email" placeholder="ouder@email.nl"></div>
         <div class="af-check"><input type="checkbox" id="r-parent-consent"><label for="r-parent-consent">Mijn ouder/voogd is op de hoogte en stemt in met het aanmaken van dit account</label></div>
       </div>
-      <button class="auth-btn" onclick="regStep1()">Volgende &#8594;</button>
+      <button type="button" class="auth-btn" onclick="regStep1()">Volgende &#8594;</button>
       <div class="auth-note">Al een account? <a onclick="switchAuthTab('login')">Inloggen</a></div>
     </div>
 
@@ -3369,14 +3369,14 @@ document.querySelectorAll('a[onclick*="scrollIntoView"]').forEach(function(a) {
       <div class="auth-steps"><div class="auth-step-dot"></div><div class="auth-step-dot on"></div><div class="auth-step-dot"></div></div>
       <p style="font-size:.83rem;color:var(--sub);margin-bottom:16px">Stap 2 van 3 &mdash; <strong style="color:var(--text)">Wachtwoord instellen</strong></p>
       <div class="af">
-        <label>Wachtwoord * <span style="font-size:.67rem;color:var(--muted)">(minimaal 8 tekens)</span></label>
+        <label for="r-pw">Wachtwoord * <span style="font-size:.67rem;color:var(--muted)">(minimaal 8 tekens)</span></label>
         <input type="password" id="r-pw" placeholder="Minimaal 8 tekens" oninput="checkPwStrength(this.value)">
         <div id="pw-strength-bar" class="pw-strength"></div>
         <div id="pw-strength-label" style="font-size:.67rem;color:var(--muted);margin-top:2px"></div>
         <div class="af-error" id="r-pw-err">Minimaal 8 tekens vereist</div>
       </div>
-      <div class="af"><label>Herhaal wachtwoord *</label><input type="password" id="r-pw2" placeholder="Zelfde wachtwoord opnieuw"><div class="af-error" id="r-pw2-err">Wachtwoorden komen niet overeen</div></div>
-      <div class="af"><label>Ik gebruik Wijzer als</label>
+      <div class="af"><label for="r-pw2">Herhaal wachtwoord *</label><input type="password" id="r-pw2" placeholder="Zelfde wachtwoord opnieuw"><div class="af-error" id="r-pw2-err">Wachtwoorden komen niet overeen</div></div>
+      <div class="af"><label for="r-type">Ik gebruik Wijzer als</label>
         <select id="r-type">
           <option value="particulier">Particulier</option>
           <option value="zzp">ZZP'er / Freelancer</option>
@@ -3388,8 +3388,8 @@ document.querySelectorAll('a[onclick*="scrollIntoView"]').forEach(function(a) {
       <div class="af-error" id="r-terms-err">U dient akkoord te gaan met de voorwaarden</div>
       <div class="af-check"><input type="checkbox" id="r-newsletter"><label for="r-newsletter">Ik ontvang graag de maandelijkse Wijzer expertbrief (optioneel)</label></div>
       <div style="display:flex;gap:9px;margin-top:4px">
-        <button onclick="showPanel('reg-1')" style="flex:1;background:transparent;color:var(--text);border:1px solid var(--bdr);padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.83rem;cursor:pointer">&#8592; Terug</button>
-        <button class="auth-btn" onclick="regStep2()" style="flex:2;margin-top:0">Volgende &#8594;</button>
+        <button type="button" onclick="showPanel('reg-1')" style="flex:1;background:transparent;color:var(--text);border:1px solid var(--bdr);padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.83rem;cursor:pointer">&#8592; Terug</button>
+        <button type="button" class="auth-btn" onclick="regStep2()" style="flex:2;margin-top:0">Volgende &#8594;</button>
       </div>
     </div>
 
@@ -3408,8 +3408,8 @@ document.querySelectorAll('a[onclick*="scrollIntoView"]').forEach(function(a) {
       <p style="font-size:.69rem;color:var(--muted);margin:10px 0 14px;line-height:1.5">Betaalde abonnementen worden na e-mailbevestiging geactiveerd. Maandelijks opzegbaar.</p>
       <div style="background:rgba(61,186,154,.05);border:1px solid rgba(61,186,154,.15);border-radius:8px;padding:9px 12px;font-size:.71rem;color:var(--muted);display:flex;gap:7px;margin-bottom:14px">&#128272; Wettelijk beroepsgeheim &middot; NDA voor alle experts &middot; AVG-conform &middot; Nooit doorverkoop van data</div>
       <div style="display:flex;gap:9px">
-        <button onclick="showPanel('reg-2')" style="flex:1;background:transparent;color:var(--text);border:1px solid var(--bdr);padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.83rem;cursor:pointer">&#8592; Terug</button>
-        <button class="auth-btn" onclick="regFinish()" style="flex:2;margin-top:0">Account aanmaken &#8594;</button>
+        <button type="button" onclick="showPanel('reg-2')" style="flex:1;background:transparent;color:var(--text);border:1px solid var(--bdr);padding:12px;border-radius:9px;font-family:'Inter',sans-serif;font-size:.83rem;cursor:pointer">&#8592; Terug</button>
+        <button type="button" class="auth-btn" onclick="regFinish()" style="flex:2;margin-top:0">Account aanmaken &#8594;</button>
       </div>
     </div>
 
@@ -3423,17 +3423,17 @@ document.querySelectorAll('a[onclick*="scrollIntoView"]').forEach(function(a) {
         <div id="success-u18-note" style="display:none;background:rgba(196,148,30,.07);border:1px solid var(--bdr2);border-radius:8px;padding:10px 13px;font-size:.75rem;color:var(--gold3);margin-bottom:14px;text-align:left">
           &#128118; Omdat u jonger bent dan 18, heeft uw ouder/voogd ook een e-mail ontvangen. Uw account wordt geactiveerd zodra zij toestemming hebben gegeven.
         </div>
-        <button class="auth-btn" onclick="closeAuth();openChat()">Start met uw eerste vraag &#8594;</button>
+        <button type="button" class="auth-btn" onclick="closeAuth();openChat()">Start met uw eerste vraag &#8594;</button>
       </div>
     </div>
 
     <!-- FORGOT PASSWORD -->
     <div id="panel-forgot" class="auth-body" style="display:none">
-      <button onclick="showPanel('login')" style="background:none;border:none;color:var(--gold2);font-size:.79rem;cursor:pointer;padding:0;margin-bottom:14px;font-family:'Inter',sans-serif">&#8592; Terug naar inloggen</button>
+      <button type="button" onclick="showPanel('login')" style="background:none;border:none;color:var(--gold2);font-size:.79rem;cursor:pointer;padding:0;margin-bottom:14px;font-family:'Inter',sans-serif">&#8592; Terug naar inloggen</button>
       <p style="font-size:.87rem;font-weight:500;color:var(--text);margin-bottom:5px">Wachtwoord vergeten</p>
       <p style="font-size:.81rem;color:var(--muted);margin-bottom:16px">Vul uw e-mailadres in. U ontvangt een resetlink.</p>
-      <div class="af"><label>E-mailadres</label><input type="email" id="forgot-email" placeholder="uw@email.nl" onkeydown="if(event.key==='Enter')doForgot()"></div>
-      <button class="auth-btn" onclick="doForgot()">Verstuur resetlink</button>
+      <div class="af"><label for="forgot-email">E-mailadres</label><input type="email" id="forgot-email" placeholder="uw@email.nl" onkeydown="if(event.key==='Enter')doForgot()"></div>
+      <button type="button" class="auth-btn" onclick="doForgot()">Verstuur resetlink</button>
     </div>
 
   </div>
@@ -3856,7 +3856,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   <div class="db-sbar">
     <span class="db-sbar-t" id="db-clock">9:41</span>
     <div class="db-sbar-r">
-      <button class="db-lang-btn" onclick="toggleLang()" id="lang-btn-domain">🌐 EN</button>
+      <button type="button" class="db-lang-btn" onclick="toggleLang()" id="lang-btn-domain">🌐 EN</button>
       <span>📶</span><span>🔋</span>
     </div>
   </div>
@@ -3867,7 +3867,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
         <div style="font-family:'Playfair Display',serif;font-size:1.75rem;font-weight:400;color:var(--text);line-height:1.1;margin-bottom:6px"><span id="domain-greeting">Goedemorgen,</span><br><em id="domain-name" style="color:var(--gold)">—</em></div>
         <div style="font-size:.75rem;color:var(--muted)" data-i18n="choose_domain">Kies uw domein — wij tonen de juiste experts en informatie</div>
       </div>
-      <button class="db-lang-btn" onclick="toggleLang()" id="lang-btn-domain" style="flex-shrink:0;margin-top:4px">🌐 EN</button>
+      <button type="button" class="db-lang-btn" onclick="toggleLang()" id="lang-btn-domain-2" style="flex-shrink:0;margin-top:4px">🌐 EN</button>
     </div>
 
     <div class="db-domain-grid" style="margin-bottom:18px">
@@ -3925,7 +3925,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 <div class="db-screen" id="dbs-home">
   <div class="db-sbar">
     <span class="db-sbar-t">9:41</span>
-    <div class="db-sbar-r"><button class="db-lang-btn" onclick="toggleLang()" id="lang-btn-home">🌐 EN</button><span>📶</span><span>🔋</span></div>
+    <div class="db-sbar-r"><button type="button" class="db-lang-btn" onclick="toggleLang()" id="lang-btn-home">🌐 EN</button><span>📶</span><span>🔋</span></div>
   </div>
   <div class="db-scr">
 
@@ -3936,7 +3936,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
         <div style="font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:400;color:var(--text);margin-top:5px"><span id="home-greeting">Goedemorgen</span>, <em id="home-firstname" style="color:var(--gold)">—</em></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px">
-        <button class="db-lang-btn" onclick="toggleLang()" id="lang-btn-home">🌐 EN</button>
+        <button type="button" class="db-lang-btn" onclick="toggleLang()" id="lang-btn-home-2">🌐 EN</button>
         <div style="position:relative;cursor:pointer" onclick="dbNav('account')">
           <div id="home-av" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8a5f08);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:.9rem;font-weight:500;color:var(--b0)">—</div>
         </div>
@@ -3987,11 +3987,11 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 
   </div>
   <div class="db-bnav" id="home-bnav">
-    <button class="db-bni on" onclick="dbNav('home')"><i class="db-bic fa-solid fa-house"></i><span class="db-blb" data-i18n="nav_home">Home</span></button>
-    <button class="db-bni" onclick="dbNav('chat')"><i class="db-bic fa-solid fa-comment"></i><span class="db-blb" data-i18n="nav_advisor">Adviseur</span></button>
-    <button class="db-bni" onclick="dbNav('kennisbank')"><i class="db-bic fa-solid fa-book-open"></i><span class="db-blb" data-i18n="nav_kb">Kennisbank</span></button>
-    <button class="db-bni" onclick="dbNav('experts')"><i class="db-bic fa-solid fa-users"></i><span class="db-blb" data-i18n="nav_experts">Experts</span></button>
-    <button class="db-bni" onclick="dbNav('account')"><i class="db-bic fa-solid fa-circle-user"></i><span class="db-blb" data-i18n="nav_account">Account</span></button>
+    <button type="button" class="db-bni on" onclick="dbNav('home')"><i class="db-bic fa-solid fa-house"></i><span class="db-blb" data-i18n="nav_home">Home</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('chat')"><i class="db-bic fa-solid fa-comment"></i><span class="db-blb" data-i18n="nav_advisor">Adviseur</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('kennisbank')"><i class="db-bic fa-solid fa-book-open"></i><span class="db-blb" data-i18n="nav_kb">Kennisbank</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('experts')"><i class="db-bic fa-solid fa-users"></i><span class="db-blb" data-i18n="nav_experts">Experts</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('account')"><i class="db-bic fa-solid fa-circle-user"></i><span class="db-blb" data-i18n="nav_account">Account</span></button>
   </div>
 </div>
 
@@ -4012,8 +4012,8 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       <div id="chat-domain-chip"></div>
       <!-- AI / Expert toggle -->
       <div id="chat-mode-toggle" style="display:flex;align-items:center;background:var(--b3);border:1px solid var(--bdr);border-radius:20px;padding:2px;gap:2px">
-        <button id="chat-mode-ai" onclick="setChatMode('ai')" style="padding:4px 10px;border-radius:16px;border:none;font-family:'Inter',sans-serif;font-size:.65rem;cursor:pointer;transition:all .2s;background:var(--gold);color:var(--b0);font-weight:500">AI</button>
-        <button id="chat-mode-expert" onclick="setChatMode('expert')" style="padding:4px 10px;border-radius:16px;border:none;font-family:'Inter',sans-serif;font-size:.65rem;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted)">Expert</button>
+        <button type="button" id="chat-mode-ai" onclick="setChatMode('ai')" style="padding:4px 10px;border-radius:16px;border:none;font-family:'Inter',sans-serif;font-size:.65rem;cursor:pointer;transition:all .2s;background:var(--gold);color:var(--b0);font-weight:500">AI</button>
+        <button type="button" id="chat-mode-expert" onclick="setChatMode('expert')" style="padding:4px 10px;border-radius:16px;border:none;font-family:'Inter',sans-serif;font-size:.65rem;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted)">Expert</button>
       </div>
       <span style="font-size:.68rem;color:var(--muted)">🔐</span>
     </div>
@@ -4025,11 +4025,11 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       <div>
         <div class="db-bub db-bub-ai" id="chat-welcome-msg">Goedemorgen! Ik ben Wijzer, uw AI-adviseur op basis van een expert-gevalideerde kennisbank.<br><br>Stel uw vraag over <strong>recht, fiscaal, boekhouden, HR</strong> of een ander onderwerp.</div>
         <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px" id="chat-chips">
-          <button class="db-chip" onclick="sendDbMsg('Hoe minimaliseer ik erfbelasting?')">💶 Erfbelasting</button>
-          <button class="db-chip" onclick="sendDbMsg('Wanneer is een BV slim?')">🏢 BV oprichten</button>
-          <button class="db-chip" onclick="sendDbMsg('BTW-regels buitenland?')">💶 BTW</button>
-          <button class="db-chip" onclick="sendDbMsg('Ontslag op staande voet?')">⚖️ Ontslag</button>
-          <button class="db-chip" onclick="sendDbMsg('WBSO subsidie aanvragen?')">📋 WBSO</button>
+          <button type="button" class="db-chip" onclick="sendDbMsg('Hoe minimaliseer ik erfbelasting?')">💶 Erfbelasting</button>
+          <button type="button" class="db-chip" onclick="sendDbMsg('Wanneer is een BV slim?')">🏢 BV oprichten</button>
+          <button type="button" class="db-chip" onclick="sendDbMsg('BTW-regels buitenland?')">💶 BTW</button>
+          <button type="button" class="db-chip" onclick="sendDbMsg('Ontslag op staande voet?')">⚖️ Ontslag</button>
+          <button type="button" class="db-chip" onclick="sendDbMsg('WBSO subsidie aanvragen?')">📋 WBSO</button>
         </div>
       </div>
     </div>
@@ -4037,7 +4037,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 
   <div class="db-chat-inp-row">
     <input class="db-chat-input" type="text" id="db-chat-inp" onkeydown="if(event.key==='Enter')sendDbMsg()" data-i18n-ph="ask_question">
-    <button class="db-chat-send" onclick="sendDbMsg()">↑</button>
+    <button type="button" class="db-chat-send" onclick="sendDbMsg()">↑</button>
   </div>
 </div>
 
@@ -4055,15 +4055,15 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   <div class="db-scr" style="padding:0 20px 20px" id="kb-list-wrap">
     <input class="db-kb-search" type="text" id="db-kb-search" oninput="filterDbKb()" style="margin-bottom:12px" data-i18n-ph="kb_search">
     <div class="db-hchip-row" style="margin-bottom:14px">
-      <button class="db-hchip on" onclick="filterDbKbCat(this,'alle')" data-i18n="all">Alle</button>
-      <button class="db-hchip" onclick="filterDbKbCat(this,'fiscaal')">💶 Fiscaal</button>
-      <button class="db-hchip" onclick="filterDbKbCat(this,'juridisch')">⚖️ Juridisch</button>
-      <button class="db-hchip" onclick="filterDbKbCat(this,'bedrijf')">🏢 Bedrijf</button>
+      <button type="button" class="db-hchip on" onclick="filterDbKbCat(this,'alle')" data-i18n="all">Alle</button>
+      <button type="button" class="db-hchip" onclick="filterDbKbCat(this,'fiscaal')">💶 Fiscaal</button>
+      <button type="button" class="db-hchip" onclick="filterDbKbCat(this,'juridisch')">⚖️ Juridisch</button>
+      <button type="button" class="db-hchip" onclick="filterDbKbCat(this,'bedrijf')">🏢 Bedrijf</button>
     </div>
     <div class="db-kb-grid-inner" id="db-kb-list"></div>
   </div>
   <div class="db-scr" style="padding:0 20px 20px;display:none" id="kb-article-wrap">
-    <button onclick="closeDbArt()" style="background:none;border:none;color:var(--gold2);font-size:.8rem;cursor:pointer;padding:0;margin-bottom:14px;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px">← <span data-i18n="back_kb">Terug naar kennisbank</span></button>
+    <button type="button" onclick="closeDbArt()" style="background:none;border:none;color:var(--gold2);font-size:.8rem;cursor:pointer;padding:0;margin-bottom:14px;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:5px">← <span data-i18n="back_kb">Terug naar kennisbank</span></button>
     <div id="db-kb-article-content"></div>
   </div>
 </div>
@@ -4084,7 +4084,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     <div id="db-experts-list"></div>
     <div style="background:var(--b2);border:1px solid var(--bdr);border-radius:12px;padding:14px 16px;text-align:center;margin-top:4px">
       <div style="font-size:.78rem;color:var(--sub);margin-bottom:10px" data-i18n="expert_join">Wilt u als expert bijdragen? <strong style="color:var(--text)">70%</strong> van elk consult.</div>
-      <button class="db-obtn" onclick="dbNav('account')" data-i18n="expert_apply">Aanmelden als expert →</button>
+      <button type="button" class="db-obtn" onclick="dbNav('account')" data-i18n="expert_apply">Aanmelden als expert →</button>
     </div>
   </div>
 </div>
@@ -4141,14 +4141,14 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 <div class="db-screen" id="dbs-account">
   <div class="db-sbar">
     <span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text)" data-i18n="nav_account">Account</span>
-    <button class="db-lang-btn" onclick="toggleLang()" id="lang-btn-account">🌐 EN</button>
+    <button type="button" class="db-lang-btn" onclick="toggleLang()" id="lang-btn-account">🌐 EN</button>
   </div>
   <div class="db-scr">
 
     <!-- account top bar -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 8px">
       <span style="font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--text)" data-i18n="nav_account">Account</span>
-      <button class="db-lang-btn" onclick="toggleLang()" id="lang-btn-account">🌐 EN</button>
+      <button type="button" class="db-lang-btn" onclick="toggleLang()" id="lang-btn-account-2">🌐 EN</button>
     </div>
 
     <!-- avatar + name -->
@@ -4179,7 +4179,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     <div style="padding:0 20px;margin-bottom:8px"><div class="db-seclabel" data-i18n="current_domain">Huidig domein</div></div>
     <div style="margin:0 20px 14px;background:var(--b2);border:1px solid var(--bdr);border-radius:11px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between">
       <div id="acc-domain-chip"></div>
-      <button onclick="dbNav('domain')" class="db-obtn" data-i18n="switch_domain">Wisselen</button>
+      <button type="button" onclick="dbNav('domain')" class="db-obtn" data-i18n="switch_domain">Wisselen</button>
     </div>
 
     <!-- services -->
@@ -4203,11 +4203,11 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 
   </div>
   <div class="db-bnav">
-    <button class="db-bni" onclick="dbNav('home')"><i class="db-bic fa-solid fa-house"></i><span class="db-blb" data-i18n="nav_home">Home</span></button>
-    <button class="db-bni" onclick="dbNav('chat')"><i class="db-bic fa-solid fa-comment"></i><span class="db-blb" data-i18n="nav_advisor">Adviseur</span></button>
-    <button class="db-bni" onclick="dbNav('kennisbank')"><i class="db-bic fa-solid fa-book-open"></i><span class="db-blb" data-i18n="nav_kb">Kennisbank</span></button>
-    <button class="db-bni" onclick="dbNav('experts')"><i class="db-bic fa-solid fa-users"></i><span class="db-blb" data-i18n="nav_experts">Experts</span></button>
-    <button class="db-bni on" onclick="dbNav('account')"><i class="db-bic fa-solid fa-circle-user"></i><span class="db-blb" data-i18n="nav_account">Account</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('home')"><i class="db-bic fa-solid fa-house"></i><span class="db-blb" data-i18n="nav_home">Home</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('chat')"><i class="db-bic fa-solid fa-comment"></i><span class="db-blb" data-i18n="nav_advisor">Adviseur</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('kennisbank')"><i class="db-bic fa-solid fa-book-open"></i><span class="db-blb" data-i18n="nav_kb">Kennisbank</span></button>
+    <button type="button" class="db-bni" onclick="dbNav('experts')"><i class="db-bic fa-solid fa-users"></i><span class="db-blb" data-i18n="nav_experts">Experts</span></button>
+    <button type="button" class="db-bni on" onclick="dbNav('account')"><i class="db-bic fa-solid fa-circle-user"></i><span class="db-blb" data-i18n="nav_account">Account</span></button>
   </div>
 </div>
 
@@ -4224,12 +4224,12 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   <div class="db-scr" style="padding:0 20px 24px">
     <div class="db-card" style="padding:16px;margin-bottom:14px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-        <div><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="firstname">Voornaam</div><input id="pf-fname" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none"></div>
-        <div><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="lastname">Achternaam</div><input id="pf-lname" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none"></div>
+        <div><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="firstname">Voornaam</div><input type="text" id="pf-fname" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none"></div>
+        <div><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="lastname">Achternaam</div><input type="text" id="pf-lname" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none"></div>
       </div>
-      <div style="margin-bottom:10px"><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="email">E-mailadres</div><input id="pf-email" disabled style="width:100%;background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--muted);font-family:'Inter',sans-serif;font-size:.82rem;outline:none;opacity:.6"></div>
-      <div style="margin-bottom:14px"><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="phone">Telefoonnummer</div><input id="pf-phone" placeholder="+31 6 12345678" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none"></div>
-      <button class="db-gbtn" onclick="saveProfiel()" data-i18n="save_changes">Wijzigingen opslaan</button>
+      <div style="margin-bottom:10px"><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="email">E-mailadres</div><input type="email" id="pf-email" disabled style="width:100%;background:rgba(255,255,255,.02);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--muted);font-family:'Inter',sans-serif;font-size:.82rem;outline:none;opacity:.6"></div>
+      <div style="margin-bottom:14px"><div style="font-size:.72rem;color:var(--sub);margin-bottom:4px" data-i18n="phone">Telefoonnummer</div><input type="tel" id="pf-phone" placeholder="+31 6 12345678" style="width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:8px;padding:8px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none"></div>
+      <button type="button" class="db-gbtn" onclick="saveProfiel()" data-i18n="save_changes">Wijzigingen opslaan</button>
       <div id="pf-saved-msg" style="display:none;font-size:.72rem;color:var(--teal);text-align:center;margin-top:8px">✓ <span data-i18n="saved">Opgeslagen</span></div>
     </div>
   </div>
@@ -4250,7 +4250,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     <div id="db-pkg-list"></div>
     <div id="pkg-action-wrap" style="display:none;margin-top:12px">
       <div style="background:rgba(196,148,30,.07);border:1px solid var(--bdr2);border-radius:9px;padding:10px 13px;font-size:.72rem;color:var(--sub);margin-bottom:10px">📧 <span data-i18n="pkg_email_note">Na bevestiging ontvangt u een betaallink per e-mail. Uw abonnement wordt direct geactiveerd.</span></div>
-      <button class="db-gbtn" onclick="requestPkgUpgrade()" data-i18n="request_sub">Abonnement aanvragen →</button>
+      <button type="button" class="db-gbtn" onclick="requestPkgUpgrade()" data-i18n="request_sub">Abonnement aanvragen →</button>
     </div>
     <div id="pkg-confirm-wrap" style="display:none;margin-top:10px;background:rgba(61,186,154,.08);border:1px solid rgba(61,186,154,.2);border-radius:9px;padding:12px;text-align:center;font-size:.76rem;color:var(--teal)"></div>
   </div>
@@ -4264,7 +4264,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     <div style="font-size:40px;margin-bottom:12px">✅</div>
     <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--text);margin-bottom:8px" data-i18n="consult_confirmed">Consult bevestigd</div>
     <div style="font-size:.78rem;color:var(--muted);line-height:1.65;margin-bottom:20px" id="consult-confirm-msg">Uw verzoek is ontvangen. U krijgt binnen 30 minuten een bevestiging per e-mail.</div>
-    <button onclick="document.getElementById('db-consult-overlay').style.display='none'" class="db-gbtn" data-i18n="back_home">Terug naar home</button>
+    <button type="button" onclick="document.getElementById('db-consult-overlay').style.display='none'" class="db-gbtn" data-i18n="back_home">Terug naar home</button>
   </div>
 </div>
 
@@ -4574,9 +4574,9 @@ function setChatMode(mode) {
         ?'You switched to <strong>Expert mode</strong>. You will be connected directly to a certified professional — no AI in between.<br><br>Choose how you want to speak:'
         :'U heeft overgeschakeld naar <strong>Expert-modus</strong>. U wordt direct verbonden met een gecertificeerde professional — geen AI tussenstap.<br><br>Kies hoe u wilt spreken:')+'</div>'
       +'<div style="display:flex;flex-direction:column;gap:6px">'
-      +'<button onclick="dbNav(\'consult\')" style="background:var(--b3);border:1px solid var(--bdr2);color:var(--gold2);border-radius:9px;padding:10px 14px;font-family:\'Inter\',sans-serif;font-size:.78rem;cursor:pointer;text-align:left">💬 '+(isEN?'Secure chat · reply within 4 hrs · Included':'Beveiligde chat · reactie binnen 4 uur · Inbegrepen')+'</button>'
-      +'<button onclick="dbNav(\'consult\')" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);border-radius:9px;padding:10px 14px;font-family:\'Inter\',sans-serif;font-size:.78rem;cursor:pointer;text-align:left">🎥 '+(isEN?'Video call · junior expert · €55/hr':'Videogesprek · junior expert · €55/uur')+'</button>'
-      +'<button onclick="dbNav(\'consult\')" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);border-radius:9px;padding:10px 14px;font-family:\'Inter\',sans-serif;font-size:.78rem;cursor:pointer;text-align:left">⭐ '+(isEN?'Senior expert · online or in person · €120/hr':'Senior expert · online of in persoon · €120/uur')+'</button>'
+      +'<button type="button" onclick="dbNav(\'consult\')" style="background:var(--b3);border:1px solid var(--bdr2);color:var(--gold2);border-radius:9px;padding:10px 14px;font-family:\'Inter\',sans-serif;font-size:.78rem;cursor:pointer;text-align:left">💬 '+(isEN?'Secure chat · reply within 4 hrs · Included':'Beveiligde chat · reactie binnen 4 uur · Inbegrepen')+'</button>'
+      +'<button type="button" onclick="dbNav(\'consult\')" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);border-radius:9px;padding:10px 14px;font-family:\'Inter\',sans-serif;font-size:.78rem;cursor:pointer;text-align:left">🎥 '+(isEN?'Video call · junior expert · €55/hr':'Videogesprek · junior expert · €55/uur')+'</button>'
+      +'<button type="button" onclick="dbNav(\'consult\')" style="background:var(--b3);border:1px solid var(--bdr);color:var(--sub);border-radius:9px;padding:10px 14px;font-family:\'Inter\',sans-serif;font-size:.78rem;cursor:pointer;text-align:left">⭐ '+(isEN?'Senior expert · online or in person · €120/hr':'Senior expert · online of in persoon · €120/uur')+'</button>'
       +'</div></div>';
     area.appendChild(mrow);area.scrollTop=area.scrollHeight;
     setTimeout(function(){if(typeof applyTwemoji==='function')applyTwemoji(mrow);},100);
@@ -4603,7 +4603,7 @@ async function sendDbMsg(txt){
     arow.innerHTML='<div class="db-bav db-bav-ai">W</div><div style="max-width:82%;display:flex;flex-direction:column;gap:5px">'
       +'<div class="db-bub db-bub-ai">'+reply.answer+(srcH?'<div style="margin-top:5px">'+srcH+'</div>':'')+'</div>'
       +'<div class="db-validated"><span>✓</span><span>'+(t('verified_by')||'Geverifieerd door')+' <strong>'+reply.expert+'</strong>, '+reply.role+'</span><span style="margin-left:auto;font-size:.62rem;color:var(--muted)">'+reply.date+'</span></div>'
-      +'<div class="db-escalate"><span>'+(t('too_complex')||'Te complex? Spreek direct met een expert.')+'</span><button onclick="dbNav(\'consult\')">'+(t('book_expert')||'Expert boeken')+'</button></div>'
+      +'<div class="db-escalate"><span>'+(t('too_complex')||'Te complex? Spreek direct met een expert.')+'</span><button type="button" onclick="dbNav(\'consult\')">'+(t('book_expert')||'Expert boeken')+'</button></div>'
       +'</div>';
     area.appendChild(arow);area.scrollTop=area.scrollHeight;
     var domein='algemeen';
@@ -4713,7 +4713,7 @@ function openDbArt(id){
     +'<div class="db-art-body">'+lobj.body+'</div>'
     +'<div style="background:linear-gradient(135deg,#1c1608,#2a1e08);border:1px solid var(--bdr2);border-radius:12px;padding:16px;margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">'
     +'<div><div style="font-family:\'Playfair Display\',serif;font-size:.9rem;color:var(--text);margin-bottom:3px">'+moreLabel+'</div><div style="font-size:.72rem;color:var(--muted)">'+moreDesc+'</div></div>'
-    +'<button class="db-gbtn" style="width:auto;padding:9px 16px;font-size:.78rem" onclick="dbNav(\'consult\')">'+consultBtn+'</button></div>';
+    +'<button type="button" class="db-gbtn" style="width:auto;padding:9px 16px;font-size:.78rem" onclick="dbNav(\'consult\')">'+consultBtn+'</button></div>';
 }
 function closeDbArt(){
   document.getElementById('kb-article-wrap').style.display='none';
@@ -4747,7 +4747,7 @@ function renderDbExperts(){
       +'<div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">'
       +'<span style="font-size:.68rem;color:#e0b840">'+e.rate+'</span>'
       +'<span style="font-size:.65rem;color:var(--muted)">'+e.consults+' consulten</span>'
-      +'<button class="db-obtn" style="padding:5px 10px;font-size:.66rem" onclick="dbNav(\'consult\')">'+e.tarief+' → '+t('book_expert'||'Boeken')+'</button>'
+      +'<button type="button" class="db-obtn" style="padding:5px 10px;font-size:.66rem" onclick="dbNav(\'consult\')">'+e.tarief+' → '+t('book_expert'||'Boeken')+'</button>'
       +'</div></div></div></div>';
   }).join('');
 }
@@ -4904,7 +4904,7 @@ function updateNavForUser(profile){
   var navR=document.querySelector('#home-content .nav-r');
   if(!navR)return;
   navR.innerHTML='<div onclick="goPage(\'dashboard\')" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8a5f08);display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:.85rem;font-weight:500;color:var(--b0);cursor:pointer">'+initials+'</div>'
-    +'<button class="nav-cta" onclick="goPage(\'dashboard\')">Dashboard</button>';
+    +'<button type="button" class="nav-cta" onclick="goPage(\'dashboard\')">Dashboard</button>';
 }
 
 // clock
@@ -4973,8 +4973,8 @@ function showInstallBanner() {
       </div>
     </div>
     <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="installPWA()" style="background:#c4941e;color:#09090d;border:none;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer">Installeren</button>
-      <button onclick="dismissBanner()" style="background:transparent;color:#6a6460;border:1px solid rgba(255,255,255,.1);padding:8px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:.78rem;cursor:pointer">×</button>
+      <button type="button" onclick="installPWA()" style="background:#c4941e;color:#09090d;border:none;padding:8px 16px;border-radius:8px;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;cursor:pointer">Installeren</button>
+      <button type="button" onclick="dismissBanner()" style="background:transparent;color:#6a6460;border:1px solid rgba(255,255,255,.1);padding:8px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:.78rem;cursor:pointer">×</button>
     </div>`;
   installBanner.style.cssText = 'position:fixed;bottom:72px;left:0;right:0;background:#17171f;border-top:1px solid rgba(196,148,30,.2);padding:14px 20px;display:flex;align-items:center;gap:14px;z-index:9999;flex-wrap:wrap;box-shadow:0 -4px 20px rgba(0,0,0,.4);animation:slideUpBanner .3s ease';
   var style = document.createElement('style');
