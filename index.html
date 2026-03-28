@@ -3823,36 +3823,30 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   .db-qa-grid{grid-template-columns:repeat(4,1fr)}
 }
 @media(min-width:900px){
-  .db-scr{padding-left:max(20px, calc(50% - 520px));padding-right:max(20px, calc(50% - 520px))}
-  .db-hscr{
-    margin-left:calc(-1 * max(20px, calc(50% - 520px)));
-    margin-right:calc(-1 * max(20px, calc(50% - 520px)));
-    padding-left:max(20px, calc(50% - 520px));
-    padding-right:max(20px, calc(50% - 520px));
+  /* Center the entire app as a 1040px column */
+  .db-screen{
+    left:max(0px, calc(50% - 520px));
+    right:max(0px, calc(50% - 520px));
+    border-left:1px solid var(--bdr);
+    border-right:1px solid var(--bdr);
   }
+  .db-scr{padding-left:20px;padding-right:20px}
+  .db-hscr{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px}
   .db-domain-grid{grid-template-columns:repeat(3,1fr);padding:0}
   .db-qa-grid{grid-template-columns:repeat(4,1fr);padding:0}
   .db-kb-grid-inner{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .db-kb-grid-inner .db-kb-card{margin-bottom:0}
-  .db-topbar-real{
-    padding-left:max(20px, calc(50% - 520px));
-    padding-right:max(20px, calc(50% - 520px));
-  }
+  .db-topbar-real{padding-left:20px;padding-right:20px}
   #dbs-chat .db-chat-inp-row{
     left:max(0px, calc(50% - 520px));
     right:max(0px, calc(50% - 520px));
     padding-left:20px;
     padding-right:20px;
   }
-  #dbs-chat .db-chat-msgs{
-    padding-left:max(20px, calc(50% - 520px));
-    padding-right:max(20px, calc(50% - 520px));
-  }
+  #dbs-chat .db-chat-msgs{padding-left:20px;padding-right:20px}
   .db-bnav{
     left:max(0px, calc(50% - 520px));
     right:max(0px, calc(50% - 520px));
-    padding-left:0;
-    padding-right:0;
   }
 }
 </style>
