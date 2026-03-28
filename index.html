@@ -4029,10 +4029,11 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       <div class="db-bav db-bav-ai">W</div>
       <div>
         <div class="db-bub db-bub-ai" id="chat-welcome-msg">Goedemorgen! Ik ben Wijzer, uw AI-adviseur op basis van een expert-gevalideerde kennisbank.<br><br>Stel uw vraag over <strong>recht, fiscaal, boekhouden, HR</strong> of een ander onderwerp.</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px" id="chat-chips"></div>
       </div>
     </div>
   </div>
+
+  <div class="db-chat-chips" id="chat-chips"></div>
 
   <div class="db-chat-inp-row">
     <input class="db-chat-input" type="text" id="db-chat-inp" onkeydown="if(event.key==='Enter')sendDbMsg()" data-i18n-ph="ask_question">
@@ -4522,6 +4523,7 @@ function renderChatChips(){
   el.innerHTML=chips.map(function(c){
     return '<button type="button" class="db-chip" onclick="sendDbMsg(\''+c[1].replace(/'/g,"\\'")+'\'">'+c[0]+'</button>';
   }).join('');
+  el.style.display='flex'; // make sure chips row is visible
 }
 
 function selectDomain(domain){
@@ -4636,6 +4638,8 @@ async function sendDbMsg(txt){
   // If in expert mode, redirect to consult instead of AI
   if(chatMode==='expert'){dbNav('consult');return;}
   var area=document.getElementById('db-chat-msgs');if(!area)return;
+  // hide suggestion chips once user starts chatting
+  var chipsEl=document.getElementById('chat-chips');if(chipsEl)chipsEl.style.display='none';
   var urow=document.createElement('div');urow.className='db-msg-u';
   urow.innerHTML='<div class="db-bav db-bav-u">U</div><div class="db-bub db-bub-u">'+txt+'</div>';
   area.appendChild(urow);area.scrollTop=area.scrollHeight;
