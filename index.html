@@ -3823,12 +3823,13 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
   .db-qa-grid{grid-template-columns:repeat(4,1fr)}
 }
 @media(min-width:900px){
-  /* Center the entire app as a 1040px column */
+  /* Center the entire app as a 1040px column with top breathing room */
   .db-screen{
+    top:24px;
     left:max(0px, calc(50% - 520px));
     right:max(0px, calc(50% - 520px));
-    border-left:1px solid var(--bdr);
-    border-right:1px solid var(--bdr);
+    border:1px solid var(--bdr);
+    border-radius:16px 16px 0 0;
   }
   .db-scr{padding-left:20px;padding-right:20px}
   .db-hscr{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px}
@@ -3843,11 +3844,13 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     padding-left:20px;
     padding-right:20px;
   }
-  #dbs-chat .db-chat-msgs{padding-left:20px;padding-right:20px}
+  #dbs-chat .db-chat-msgs{padding-left:20px;padding-right:20px;padding-top:24px}
   .db-bnav{
     left:max(0px, calc(50% - 520px));
     right:max(0px, calc(50% - 520px));
+    border-radius:0 0 0 0;
   }
+  #dbs-chat .db-chat-inp-row{bottom:62px}
 }
 </style>
 
