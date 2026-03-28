@@ -4934,8 +4934,17 @@ function renderDashboard(profile){
   var cw=document.getElementById('chat-welcome-msg'); if(cw)cw.innerHTML=getChatGreeting(dbLang);
   // update domain screen name
   var dn=document.getElementById('domain-name');if(dn)dn.textContent=profile.voornaam||'—';
-  // go to domain selection
-  dbNav('domain');
+  // restore saved domain + screen, or show domain selection on first visit
+  var savedDomain = localStorage.getItem('wijzer_domain');
+  var savedScreen = localStorage.getItem('wijzer_screen') || 'home';
+  if(savedDomain){
+    dbDomain = savedDomain;
+    updateDbDomainChips();
+    renderChatChips();
+    dbNav(savedScreen);
+  } else {
+    dbNav('domain');
+  }
   // apply current language
   applyLang();
   // init kennisbank
