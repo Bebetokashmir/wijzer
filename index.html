@@ -196,6 +196,9 @@ h1 em{font-style:italic;color:var(--gold)}
   box-shadow:0 0 0 2px #2a2820,0 0 0 4px #1a1814,0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(196,148,30,.04);
   position:relative;overflow:hidden;flex-shrink:0;
 }
+@media(min-width:1200px){
+  .phone-shell{width:320px;height:650px;border-radius:46px}
+}
 .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:90px;height:24px;background:#0a0a0e;border-radius:0 0 14px 14px;z-index:10}
 .phone-screen{position:absolute;inset:0;background:var(--b0);display:flex;flex-direction:column;overflow:hidden}
 /* phone status bar */
@@ -1329,7 +1332,7 @@ function closeConsult(){
      CHAT MODAL
 ════════════════════════════════════ -->
 <div id="chat-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)" onclick="if(event.target===this)closeChat()">
-  <div id="chat-modal-inner" style="width:100%;max-width:720px;background:var(--b2);border:1px solid var(--bdr);border-radius:20px 20px 0 0;overflow:hidden;opacity:0;transform:translateY(40px);transition:opacity .35s ease,transform .35s cubic-bezier(.2,0,.2,1);box-shadow:0 -20px 80px rgba(0,0,0,.6)">
+  <div id="chat-modal-inner" style="width:100%;max-width:720px;background:var(--b2);border:1px solid var(--bdr);border-radius:20px 20px 0 0;overflow:hidden;opacity:0;transform:translateY(40px);transition:opacity .35s ease,transform .35s cubic-bezier(.2,0,.2,1);box-shadow:0 -20px 80px rgba(0,0,0,.6);display:flex;flex-direction:column;max-height:90vh">
     <!-- header -->
     <div style="background:var(--b1);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bdr)">
       <div style="display:flex;align-items:center;gap:10px">
@@ -1347,7 +1350,7 @@ function closeConsult(){
     </div>
 
     <!-- messages area -->
-    <div id="modal-chat-area" data-chat-area="1" style="padding:20px 20px 10px;min-height:280px;max-height:400px;overflow-y:auto;display:flex;flex-direction:column">
+    <div id="modal-chat-area" data-chat-area="1" style="padding:20px 20px 10px;flex:1;overflow-y:auto;display:flex;flex-direction:column;min-height:0">
       <!-- welcome message -->
       <div style="display:flex;gap:8px;margin-bottom:12px">
         <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8a5f08);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:11px;color:var(--b0);flex-shrink:0;align-self:flex-end">W</div>
@@ -1367,13 +1370,13 @@ function closeConsult(){
     </div>
 
     <!-- input -->
-    <div style="padding:12px 20px 20px;border-top:1px solid var(--bdr);display:flex;gap:8px;align-items:center;background:var(--b2)">
+    <div style="padding:12px 20px 20px;border-top:1px solid var(--bdr);display:flex;gap:8px;align-items:center;background:var(--b2);flex-shrink:0">
       <div style="flex:1;background:rgba(255,255,255,.04);border:1px solid var(--bdr);border-radius:10px;display:flex;align-items:center;padding:8px 14px;gap:8px">
         <input id="chat-inp" style="flex:1;background:none;border:none;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;outline:none" placeholder="Stel uw vraag…" onkeydown="sendChatMsg(event)">
       </div>
       <button type="button" onclick="sendChatMsg()" style="background:var(--gold);border:none;width:38px;height:38px;border-radius:9px;cursor:pointer;color:var(--b0);font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s" onmouseover="this.style.background='var(--gold2)'" onmouseout="this.style.background='var(--gold)'">↑</button>
     </div>
-    <div id="chat-modal-disclaimer" style="text-align:center;padding:0 20px 14px;font-size:.67rem;color:var(--muted)">🤖 U spreekt met een AI — conform EU AI Act 2026 · 🔐 Uw gesprek is volledig vertrouwelijk</div>
+    <div id="chat-modal-disclaimer" style="text-align:center;padding:0 20px 14px;font-size:.67rem;color:var(--muted);flex-shrink:0">🤖 U spreekt met een AI — conform EU AI Act 2026 · 🔐 Uw gesprek is volledig vertrouwelijk</div>
   </div>
 </div>
 
@@ -3786,7 +3789,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
 /* chat input stays above nav */
 #dbs-chat{padding-bottom:0}
 #dbs-chat .db-chat-inp-row{
-  position:fixed;bottom:62px;left:0;right:0;
+  position:fixed;bottom:calc(62px + env(safe-area-inset-bottom,0px));left:0;right:0;
   padding:8px 16px;
   background:var(--b1);border-top:1px solid var(--bdr);z-index:40;
 }
@@ -3836,14 +3839,21 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
     padding-right:max(20px, calc(50% - 520px));
   }
   #dbs-chat .db-chat-inp-row{
-    padding-left:max(20px, calc(50% - 520px));
-    padding-right:max(20px, calc(50% - 520px));
+    left:max(0px, calc(50% - 520px));
+    right:max(0px, calc(50% - 520px));
+    padding-left:20px;
+    padding-right:20px;
   }
   #dbs-chat .db-chat-msgs{
     padding-left:max(20px, calc(50% - 520px));
     padding-right:max(20px, calc(50% - 520px));
   }
-  .db-bnav{padding-left:max(0px, calc(50% - 520px));padding-right:max(0px, calc(50% - 520px))}
+  .db-bnav{
+    left:max(0px, calc(50% - 520px));
+    right:max(0px, calc(50% - 520px));
+    padding-left:0;
+    padding-right:0;
+  }
 }
 </style>
 
