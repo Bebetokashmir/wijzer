@@ -2905,6 +2905,18 @@ var _goPage = goPage;
 goPage = function(name) {
   _goPage(name);
   updateNavForPage(name);
+  // restore saved domain + screen when opening dashboard
+  if(name === 'dashboard') {
+    var savedDomain = localStorage.getItem('wijzer_domain');
+    var savedScreen = localStorage.getItem('wijzer_screen') || 'home';
+    if(savedDomain) {
+      dbDomain = savedDomain;
+      updateDbDomainChips();
+      dbNav(savedScreen);
+    } else {
+      dbNav('domain');
+    }
+  }
 };
 window.goPage = goPage;
 </script>
@@ -4503,6 +4515,7 @@ function updateDbDomainChips(){
 
 function selectDomain(domain){
   dbDomain=domain;
+  localStorage.setItem('wijzer_domain', domain);
   updateDbDomainChips();
   dbNav('home');
 }
@@ -4521,7 +4534,9 @@ function dbNav(name){
   document.querySelectorAll('.db-screen').forEach(function(s){s.classList.remove('on');});
   var target=document.getElementById(dbScreenMap[name]||'dbs-home');
   if(target)target.classList.add('on');
-  // sync bottom nav active state (each screen has its own bnav with static on class)
+  // persist current screen (only main nav screens)
+  var mainScreens=['home','chat','kennisbank','experts','account'];
+  if(mainScreens.indexOf(name)>=0) localStorage.setItem('wijzer_screen', name);
   // scroll to top
   if(target){var scr=target.querySelector('.db-scr');if(scr)scr.scrollTop=0;}
   // refresh
