@@ -2912,6 +2912,7 @@ goPage = function(name) {
     if(savedDomain) {
       dbDomain = savedDomain;
       updateDbDomainChips();
+      renderChatChips();
       dbNav(savedScreen);
     } else {
       dbNav('domain');
@@ -4029,13 +4030,7 @@ img.emoji{display:inline-block;height:1em;width:1em;vertical-align:-0.1em;object
       <div class="db-bav db-bav-ai">W</div>
       <div>
         <div class="db-bub db-bub-ai" id="chat-welcome-msg">Goedemorgen! Ik ben Wijzer, uw AI-adviseur op basis van een expert-gevalideerde kennisbank.<br><br>Stel uw vraag over <strong>recht, fiscaal, boekhouden, HR</strong> of een ander onderwerp.</div>
-        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px" id="chat-chips">
-          <button type="button" class="db-chip" onclick="sendDbMsg('Hoe minimaliseer ik erfbelasting?')">💶 Erfbelasting</button>
-          <button type="button" class="db-chip" onclick="sendDbMsg('Wanneer is een BV slim?')">🏢 BV oprichten</button>
-          <button type="button" class="db-chip" onclick="sendDbMsg('BTW-regels buitenland?')">💶 BTW</button>
-          <button type="button" class="db-chip" onclick="sendDbMsg('Ontslag op staande voet?')">⚖️ Ontslag</button>
-          <button type="button" class="db-chip" onclick="sendDbMsg('WBSO subsidie aanvragen?')">📋 WBSO</button>
-        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:7px" id="chat-chips"></div>
       </div>
     </div>
   </div>
@@ -4513,10 +4508,28 @@ function updateDbDomainChips(){
   });
 }
 
+var domainChatChips={
+  juridisch: [['⚖️ Non-concurrentie','Wanneer is een non-concurrentiebeding geldig?'],['📄 Aansprakelijkheid','Wanneer ben ik aansprakelijk als ondernemer?'],['🏛 AVG compliance','Wat moet ik regelen voor AVG-compliance?'],['👔 Ontslag','Wat zijn de regels voor ontslag op staande voet?']],
+  fiscaal:   [['💶 Erfbelasting','Hoe minimaliseer ik erfbelasting?'],['🧾 BTW buitenland','Welke BTW-regels gelden voor diensten naar het buitenland?'],['🏢 BV oprichten','Wanneer is een BV fiscaal aantrekkelijk?'],['📊 Aangifte IB','Hoe optimaliseer ik mijn inkomstenbelastingaangifte?']],
+  financieel:[['📈 WBSO subsidie','Hoe vraag ik WBSO-subsidie aan?'],['💼 Bedrijfsfinanciering','Welke financieringsmogelijkheden zijn er voor mijn bedrijf?'],['🤝 Bedrijfsovername','Wat komt er kijken bij een bedrijfsovername?'],['📋 Investeringsplan','Hoe stel ik een investeringsplan op?']],
+  strategisch:[['🎯 BV vs eenmanszaak','Wanneer schakel ik over van eenmanszaak naar BV?'],['🚀 Businessplan','Hoe schrijf ik een sterk businessplan?'],['📊 Groeistrategie','Welke groeistrategie past bij mijn bedrijf?'],['🤝 Investeerders','Hoe trek ik investeerders aan voor mijn startup?']],
+  personeel: [['👥 Arbeidscontract','Waar moet een arbeidscontract aan voldoen?'],['🏥 Ziekteverzuim','Wat zijn mijn verplichtingen bij langdurig ziekteverzuim?'],['📋 Cao-afwijking','Wanneer mag ik afwijken van de cao?'],['⚖️ Ontslag werknemer','Hoe ontslaat ik een werknemer correct?']],
+  wonen:     [['🏠 Huurgebreken','Wat zijn mijn rechten als huurder bij gebreken?'],['📜 Erfrecht','Hoe werkt erfrecht zonder testament?'],['🔑 Koopovereenkomst','Waar moet een koopovereenkomst aan voldoen?'],['💰 Hypotheek','Welke hypotheekvorm past het best bij mij?']]
+};
+
+function renderChatChips(){
+  var el=document.getElementById('chat-chips');if(!el)return;
+  var chips=domainChatChips[dbDomain]||domainChatChips.juridisch;
+  el.innerHTML=chips.map(function(c){
+    return '<button type="button" class="db-chip" onclick="sendDbMsg(\''+c[1].replace(/'/g,"\\'")+'\'">'+c[0]+'</button>';
+  }).join('');
+}
+
 function selectDomain(domain){
   dbDomain=domain;
   localStorage.setItem('wijzer_domain', domain);
   updateDbDomainChips();
+  renderChatChips();
   dbNav('home');
 }
 
@@ -4546,7 +4559,7 @@ function dbNav(name){
   if(name==='abonnement'){renderDbPkgList();}
   if(name==='profiel'){syncPfFields();}
   if(name==='account'){syncAccScreen();}
-  if(name==='chat'){setTimeout(function(){var i=document.getElementById('db-chat-inp');if(i)i.focus();},200);}
+  if(name==='chat'){renderChatChips();setTimeout(function(){var i=document.getElementById('db-chat-inp');if(i)i.focus();},200);}
 }
 
 // ═══════════════════════════════════════════════════
@@ -4645,49 +4658,49 @@ async function sendDbMsg(txt){
 // KENNISBANK
 // ═══════════════════════════════════════════════════
 var dbKbArticles=[
-  {id:1,cat:'fiscaal',
+  {id:1,cat:'fiscaal',domains:['fiscaal','wonen','juridisch'],
     nl:{titel:'Erfbelasting 2026: alle vrijstellingen',samen:'Kind €26.230, jaarlijks €6.908, eenmalig €33.129. Jubelton afgeschaft.',
       body:'<p>Erfbelasting betaalt u over de waarde van wat u erft, minus uw persoonlijke vrijstelling.</p><div class="db-art-callout"><p>Kind: <strong>€26.230</strong> · Ouder→kind jaarlijks: <strong>€6.908</strong> · Eenmalig (18–40jr): <strong>€33.129</strong> · Jubelton: <strong>afgeschaft</strong></p></div><h3>Strategieën</h3><ul><li>Jaarlijks schenken tot de vrijstellingsgrens</li><li>Papieren schenking tijdens leven</li><li>Beneficiaire aanvaarding bij schulden</li><li>Testamentoptimalisatie via tweetrapsmaking</li></ul>'},
     en:{titel:'Inheritance tax 2026: all exemptions',samen:'Child €26,230, annual €6,908, one-time €33,129. Jubilee exemption abolished.',
       body:'<p>Inheritance tax is paid on what you inherit, minus your personal exemption.</p><div class="db-art-callout"><p>Child: <strong>€26,230</strong> · Parent→child annually: <strong>€6,908</strong> · One-time (ages 18–40): <strong>€33,129</strong> · Jubilee exemption: <strong>abolished</strong></p></div><h3>Strategies</h3><ul><li>Annual gifting up to the exemption limit</li><li>Paper gift during lifetime</li><li>Conditional acceptance when debts exist</li><li>Will optimisation via two-step inheritance</li></ul>'},
     expert:'Mr. A. Lammers',rol:{nl:'Notaris',en:'Civil Law Notary'},tijd:'6'},
-  {id:2,cat:'juridisch',
+  {id:2,cat:'juridisch',domains:['juridisch','personeel'],
     nl:{titel:'Non-concurrentiebeding: wanneer geldig?',samen:'Niet elk non-concurrentiebeding is afdwingbaar.',
       body:'<p>Een non-concurrentiebeding moet schriftelijk zijn overeengekomen en geldt alleen bij contracten voor onbepaalde tijd.</p><h3>Wanneer niet afdwingbaar?</h3><ul><li>Werkgever handelde ernstig verwijtbaar</li><li>Beding is te breed in geografische reikwijdte</li><li>Overmatige beperking: rechter kan matigen</li></ul><div class="db-art-callout"><p>Tip: vraag altijd een vergoeding voor de duur van het beding.</p></div>'},
     en:{titel:'Non-compete clause: when is it valid?',samen:'Not every non-compete clause is enforceable.',
       body:'<p>A non-compete clause must be agreed in writing and only applies to permanent contracts.</p><h3>When is it not enforceable?</h3><ul><li>Employer acted seriously at fault</li><li>Clause is too broad geographically</li><li>Excessive restriction: court can moderate</li></ul><div class="db-art-callout"><p>Tip: always request compensation for the duration of the clause.</p></div>'},
     expert:'Mr. M. Hartman',rol:{nl:'Advocaat',en:'Employment Law Barrister'},tijd:'5'},
-  {id:3,cat:'fiscaal',
+  {id:3,cat:'fiscaal',domains:['fiscaal','financieel'],
     nl:{titel:'BTW-regels bij diensten buitenland',samen:'B2B buiten NL: heffing verlegd. B2C >€10.000: OSS-systeem.',
       body:'<h3>B2B diensten</h3><ul><li>EU: heffing verlegd naar afnemer</li><li>Buiten EU: 0% BTW</li></ul><h3>B2C diensten</h3><ul><li>Onder €10.000/jaar: Nederlandse BTW</li><li>Boven €10.000: tarief van land afnemer via OSS</li></ul><div class="db-art-callout"><p>Registreer u voor OSS als u regelmatig aan EU-consumenten levert.</p></div>'},
     en:{titel:'VAT rules for cross-border services',samen:'B2B outside NL: reverse charge. B2C >€10,000: OSS system.',
       body:'<h3>B2B services</h3><ul><li>EU: reverse charge to the client</li><li>Outside EU: 0% VAT</li></ul><h3>B2C services</h3><ul><li>Below €10,000/year: Dutch VAT rate</li><li>Above €10,000: client\'s country rate via OSS</li></ul><div class="db-art-callout"><p>Register for OSS if you regularly supply to EU consumers.</p></div>'},
     expert:'Drs. S. van Dijk',rol:{nl:'Belastingadviseur RB',en:'Tax Advisor RB'},tijd:'4'},
-  {id:4,cat:'bedrijf',
+  {id:4,cat:'bedrijf',domains:['strategisch','fiscaal','financieel'],
     nl:{titel:'Eenmanszaak vs. BV: wanneer overstappen?',samen:'Omslagpunt ~€100.000 winst. DGA-salaris 2026: €56.000.',
       body:'<p>De BV wordt fiscaal aantrekkelijk bij winst structureel boven circa €100.000.</p><h3>Voordelen BV</h3><ul><li>Lagere belastingdruk (19% Vpb vs 49,5% IB)</li><li>Beperkte aansprakelijkheid</li></ul><h3>Nadelen BV</h3><ul><li>DGA-salaris verplicht: minimaal €56.000 in 2026</li><li>Hogere administratiekosten</li></ul><div class="db-art-callout"><p>Omzetting belastingneutraal via geruisloze inbreng.</p></div>'},
     en:{titel:'Sole trader vs. BV: when to switch?',samen:'Break-even ~€100,000 profit. Director salary 2026: €56,000.',
       body:'<p>A BV becomes tax-attractive when profit structurally exceeds around €100,000.</p><h3>Advantages of BV</h3><ul><li>Lower tax burden (19% corporate tax vs 49.5% income tax)</li><li>Limited liability</li></ul><h3>Disadvantages of BV</h3><ul><li>Director salary mandatory: minimum €56,000 in 2026</li><li>Higher administrative costs</li></ul><div class="db-art-callout"><p>Tax-neutral conversion via silent contribution — your accountant arranges this.</p></div>'},
     expert:'Drs. R. Koopman',rol:{nl:'Register Accountant RA',en:'Registered Accountant RA'},tijd:'7'},
-  {id:5,cat:'juridisch',
+  {id:5,cat:'juridisch',domains:['juridisch','personeel'],
     nl:{titel:'Ontslag op staande voet: rechten en risico\'s',samen:'Vereist dringende reden én onverwijld gegeven.',
       body:'<h3>Vereisten</h3><ul><li>Dringende reden (diefstal, fraude, ernstige mishandeling)</li><li>Onverwijld gegeven</li><li>Mededeling van de reden</li></ul><h3>Niet aan eisen voldaan?</h3><ul><li>Ontslag vernietigbaar</li><li>Werknemer kan loondoorbetaling eisen</li></ul><div class="db-art-callout"><p>Twijfelt u? Raadpleeg eerst een advocaat.</p></div>'},
     en:{titel:'Summary dismissal: rights and risks',samen:'Requires urgent reason and must be given immediately.',
       body:'<h3>Requirements</h3><ul><li>Urgent reason (theft, fraud, serious assault)</li><li>Given immediately</li><li>Reason must be communicated</li></ul><h3>Requirements not met?</h3><ul><li>Dismissal is voidable</li><li>Employee can claim continued salary</li></ul><div class="db-art-callout"><p>In doubt? Always consult a lawyer first.</p></div>'},
     expert:'Mr. M. Hartman',rol:{nl:'Advocaat',en:'Employment Law Barrister'},tijd:'5'},
-  {id:6,cat:'juridisch',
+  {id:6,cat:'juridisch',domains:['juridisch','wonen'],
     nl:{titel:'Huurder bij gebreken: uw rechten',samen:'Huurverlaging, schadevergoeding of ontbinding mogelijk.',
       body:'<h3>Uw rechten</h3><ul><li>Verhuurder schriftelijk informeren</li><li>Huurcommissie of rechter inschakelen</li><li>Huurverlaging vorderen</li></ul><div class="db-art-callout"><p>Documenteer altijd: foto\'s + aangetekende brief.</p></div>'},
     en:{titel:'Tenant with defects: your rights',samen:'Rent reduction, damages or termination possible.',
       body:'<h3>Your rights</h3><ul><li>Notify landlord in writing</li><li>Involve Rent Tribunal or court</li><li>Claim rent reduction</li></ul><div class="db-art-callout"><p>Always document: photos + registered letter.</p></div>'},
     expert:'Mr. A. Lammers',rol:{nl:'Notaris',en:'Civil Law Notary'},tijd:'4'},
-  {id:7,cat:'bedrijf',
+  {id:7,cat:'bedrijf',domains:['financieel','strategisch'],
     nl:{titel:'WBSO-subsidie aanvragen in 2026',samen:'32% korting op S&O-loonkosten tot €350.000.',
       body:'<h3>Tarieven 2026</h3><ul><li>32% over eerste €350.000 S&O-loon</li><li>16% over het meerdere</li><li>Starters: 40% over eerste €350.000</li></ul><h3>Aanvragen</h3><ul><li>Via RVO.nl vóór start project</li><li>S&O-urenregistratie bijhouden</li></ul><div class="db-art-callout"><p>Aanvragen per kwartaal — niet wachten tot jaarafsluiting.</p></div>'},
     en:{titel:'R&D tax credit (WBSO) in 2026',samen:'32% discount on R&D wage costs up to €350,000.',
       body:'<h3>Rates 2026</h3><ul><li>32% on first €350,000 R&D wages</li><li>16% on the remainder</li><li>Starters: 40% on first €350,000</li></ul><h3>Applying</h3><ul><li>Via RVO.nl before project start</li><li>Keep R&D hour records</li></ul><div class="db-art-callout"><p>Apply per quarter — do not wait until year-end.</p></div>'},
     expert:'Drs. R. Koopman',rol:{nl:'Register Accountant RA',en:'Registered Accountant RA'},tijd:'5'},
-  {id:8,cat:'bedrijf',
+  {id:8,cat:'bedrijf',domains:['juridisch','strategisch','financieel'],
     nl:{titel:'AVG compliance voor MKB: checklist 2026',samen:'Verwerkingsregister, privacybeleid, datalekprocedure.',
       body:'<h3>Checklist</h3><ul><li>✓ Verwerkingsregister bijhouden</li><li>✓ Privacyverklaring op uw website</li><li>✓ Verwerkersovereenkomsten met leveranciers</li><li>✓ Procedure bij datalekken (72 uur melden)</li></ul><div class="db-art-callout"><p>Boetes tot 4% van wereldwijde jaaromzet of €20 miljoen.</p></div>'},
     en:{titel:'GDPR compliance for SMEs: checklist 2026',samen:'Processing register, privacy policy, data breach procedure.',
@@ -4699,10 +4712,11 @@ var dbKbCat='alle', dbKbQ='';
 function renderDbKennisbank(){
   var list=document.getElementById('db-kb-list');if(!list)return;
   var f=dbKbArticles.filter(function(a){
-    var c=dbKbCat==='alle'||a.cat===dbKbCat||(dbKbCat==='juridisch'&&a.cat==='juridisch')||(dbKbCat==='fiscaal'&&a.cat==='fiscaal')||(dbKbCat==='bedrijf'&&a.cat==='bedrijf');
+    var inDomain=!dbDomain||a.domains.indexOf(dbDomain)>=0;
+    var c=dbKbCat==='alle'||a.cat===dbKbCat;
     var lobj=a[dbLang]||a.nl;
     var s=!dbKbQ||lobj.titel.toLowerCase().includes(dbKbQ)||lobj.samen.toLowerCase().includes(dbKbQ);
-    return c&&s;
+    return inDomain&&c&&s;
   });
   list.innerHTML=f.map(function(a){
     var lobj=a[dbLang]||a.nl;
@@ -4749,17 +4763,18 @@ function closeDbArt(){
 // EXPERTS
 // ═══════════════════════════════════════════════════
 var dbExpertData=[
-  {initials:'RK',bg:'linear-gradient(135deg,#1a1412,#2a1e0a)',color:'#c4941e',name:'Drs. R. Koopman',cred:'Register Accountant RA',en_cred:'Registered Accountant',dom:'Boekhouden, erfbelasting, bedrijfsovername',en_dom:'Accounting, inheritance tax, business acquisition',rate:'★★★★★',consults:'312',tarief:'€120/u'},
-  {initials:'MH',bg:'linear-gradient(135deg,#101520,#1a2030)',color:'#8ab0d4',name:'Mr. M. Hartman',cred:'Advocaat Arbeidsrecht',en_cred:'Employment Law Barrister',dom:'Contracten, ontslag, cao, medezeggenschap',en_dom:'Contracts, dismissal, collective agreements',rate:'★★★★★',consults:'247',tarief:'€120/u'},
-  {initials:'SV',bg:'linear-gradient(135deg,#0f1a14,#1a2c1a)',color:'#6ab48a',name:'Drs. S. van Dijk',cred:'Belastingadviseur RB',en_cred:'Tax Advisor RB',dom:'BTW, erfbelasting, ZZP-fiscaal, BV-structuren',en_dom:'VAT, inheritance tax, freelance tax, BV structures',rate:'★★★★★',consults:'418',tarief:'€120/u'},
-  {initials:'AL',bg:'linear-gradient(135deg,#1a1418,#2a1a22)',color:'#c48abd',name:'Mr. A. Lammers',cred:'Notaris Civiel Recht',en_cred:'Civil Law Notary',dom:'Erfrecht, testament, huurrecht, vastgoed',en_dom:'Inheritance law, will, tenancy law, real estate',rate:'★★★★★',consults:'189',tarief:'€120/u'},
-  {initials:'BN',bg:'linear-gradient(135deg,#1a1208,#2a2010)',color:'#d4a848',name:'B. Nkosi MBA',cred:'Bedrijfscoach',en_cred:'Business Coach',dom:'Oprichting, businessplan, scaling, investeerders',en_dom:'Formation, business plan, scaling, investors',rate:'★★★★★',consults:'156',tarief:'€120/u'},
-  {initials:'LV',bg:'linear-gradient(135deg,#10181a,#142828)',color:'#48b4b4',name:'L. van Wijk',cred:'Serial Entrepreneur',en_cred:'Serial Entrepreneur',dom:'3× exit, franchise, groeistrategie MKB',en_dom:'3× exit, franchise, SME growth strategy',rate:'★★★★★',consults:'203',tarief:'€120/u'}
+  {initials:'RK',bg:'linear-gradient(135deg,#1a1412,#2a1e0a)',color:'#c4941e',name:'Drs. R. Koopman',cred:'Register Accountant RA',en_cred:'Registered Accountant',dom:'Boekhouden, erfbelasting, bedrijfsovername',en_dom:'Accounting, inheritance tax, business acquisition',rate:'★★★★★',consults:'312',tarief:'€120/u',domains:['fiscaal','financieel','strategisch']},
+  {initials:'MH',bg:'linear-gradient(135deg,#101520,#1a2030)',color:'#8ab0d4',name:'Mr. M. Hartman',cred:'Advocaat Arbeidsrecht',en_cred:'Employment Law Barrister',dom:'Contracten, ontslag, cao, medezeggenschap',en_dom:'Contracts, dismissal, collective agreements',rate:'★★★★★',consults:'247',tarief:'€120/u',domains:['juridisch','personeel']},
+  {initials:'SV',bg:'linear-gradient(135deg,#0f1a14,#1a2c1a)',color:'#6ab48a',name:'Drs. S. van Dijk',cred:'Belastingadviseur RB',en_cred:'Tax Advisor RB',dom:'BTW, erfbelasting, ZZP-fiscaal, BV-structuren',en_dom:'VAT, inheritance tax, freelance tax, BV structures',rate:'★★★★★',consults:'418',tarief:'€120/u',domains:['fiscaal','financieel']},
+  {initials:'AL',bg:'linear-gradient(135deg,#1a1418,#2a1a22)',color:'#c48abd',name:'Mr. A. Lammers',cred:'Notaris Civiel Recht',en_cred:'Civil Law Notary',dom:'Erfrecht, testament, huurrecht, vastgoed',en_dom:'Inheritance law, will, tenancy law, real estate',rate:'★★★★★',consults:'189',tarief:'€120/u',domains:['juridisch','wonen','fiscaal']},
+  {initials:'BN',bg:'linear-gradient(135deg,#1a1208,#2a2010)',color:'#d4a848',name:'B. Nkosi MBA',cred:'Bedrijfscoach',en_cred:'Business Coach',dom:'Oprichting, businessplan, scaling, investeerders',en_dom:'Formation, business plan, scaling, investors',rate:'★★★★★',consults:'156',tarief:'€120/u',domains:['strategisch','financieel']},
+  {initials:'LV',bg:'linear-gradient(135deg,#10181a,#142828)',color:'#48b4b4',name:'L. van Wijk',cred:'Serial Entrepreneur',en_cred:'Serial Entrepreneur',dom:'3× exit, franchise, groeistrategie MKB',en_dom:'3× exit, franchise, SME growth strategy',rate:'★★★★★',consults:'203',tarief:'€120/u',domains:['strategisch','financieel']}
 ];
 
 function renderDbExperts(){
   var list=document.getElementById('db-experts-list');if(!list)return;
-  list.innerHTML=dbExpertData.map(function(e){
+  var filtered=dbDomain?dbExpertData.filter(function(e){return e.domains.indexOf(dbDomain)>=0;}):dbExpertData;
+  list.innerHTML=filtered.map(function(e){
     var cred=dbLang==='en'?e.en_cred:e.cred;
     var dom=dbLang==='en'?e.en_dom:e.dom;
     return'<div class="db-card" style="margin-bottom:12px;padding:0">'
