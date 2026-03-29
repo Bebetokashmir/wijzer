@@ -5028,7 +5028,7 @@ function renderDbKennisbank(){
       +'<div class="db-kb-card-cat">'+catLabel(a.cat)+'</div>'
       +'<div class="db-kb-card-t">'+lobj.titel+'</div>'
       +'<div class="db-kb-card-d">'+lobj.samen+'</div>'
-      +'<div class="db-kb-card-foot"><span class="db-kb-card-exp">✓ '+a.expert+'</span><span>'+a.tijd+' min</span></div>'
+      +'<div class="db-kb-card-foot"><span class="db-kb-card-exp">✓ '+a.expert+'</span><span>'+(a.datum||(a.id<=30?'28 mrt 2026':'29 mrt 2026'))+'</span><span>'+a.tijd+' min</span></div>'
       +'</div>';
   }).join('')||'<div style="padding:20px;text-align:center;font-size:.78rem;color:var(--muted)">'+(dbLang==='en'?'No articles found':'Geen artikelen gevonden')+'</div>';
 }
@@ -5051,7 +5051,7 @@ function openDbArt(id){
     +'<div style="display:flex;align-items:center;gap:10px;background:var(--b2);border:1px solid rgba(61,186,154,.18);border-radius:9px;padding:10px 13px;margin-bottom:16px">'
     +'<div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8a5f08);display:flex;align-items:center;justify-content:center;font-family:\'Playfair Display\',serif;font-size:10px;color:var(--b0);flex-shrink:0">'+ini+'</div>'
     +'<div><div style="font-size:.82rem;font-weight:500;color:var(--text)">'+a.expert+'</div><div style="font-size:.69rem;color:var(--gold2)">'+rolStr+'</div></div>'
-    +'<div style="margin-left:auto;font-size:.68rem;color:var(--teal)">✓ '+verifiedLabel+' · '+a.tijd+' min</div></div>'
+    +'<div style="margin-left:auto;font-size:.68rem;color:var(--teal)">✓ '+verifiedLabel+' · '+(a.datum||(a.id<=30?'28 mrt 2026':'29 mrt 2026'))+' · '+a.tijd+' min</div></div>'
     +'<div class="db-art-body">'+lobj.body+'</div>'
     +'<div style="background:linear-gradient(135deg,#1c1608,#2a1e08);border:1px solid var(--bdr2);border-radius:12px;padding:16px;margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">'
     +'<div><div style="font-family:\'Playfair Display\',serif;font-size:.9rem;color:var(--text);margin-bottom:3px">'+moreLabel+'</div><div style="font-size:.72rem;color:var(--muted)">'+moreDesc+'</div></div>'
